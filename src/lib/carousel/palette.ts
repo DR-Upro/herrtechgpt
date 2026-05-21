@@ -138,7 +138,7 @@ export async function extractPrimaryColorFromImage(file: File): Promise<string> 
       canvas.width = 80
       canvas.height = 80
       const ctx = canvas.getContext('2d')
-      if (!ctx) { URL.revokeObjectURL(url); resolve('#B598E2'); return }
+      if (!ctx) { URL.revokeObjectURL(url); resolve('#C9A04A'); return }
       ctx.drawImage(img, 0, 0, 80, 80)
       const data = ctx.getImageData(0, 0, 80, 80).data
       const freq: Record<string, number> = {}
@@ -155,13 +155,13 @@ export async function extractPrimaryColorFromImage(file: File): Promise<string> 
       }
       const top = Object.entries(freq).sort((a, b) => b[1] - a[1])[0]
       URL.revokeObjectURL(url)
-      if (!top) { resolve('#B598E2'); return }
+      if (!top) { resolve('#C9A04A'); return }
       const [r, g, b] = top[0].split(',').map(Number)
       resolve(`#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`)
     }
     img.onerror = () => {
       URL.revokeObjectURL(url)
-      resolve('#B598E2')
+      resolve('#C9A04A')
     }
     img.src = url
   })

@@ -5,7 +5,7 @@ import { WelcomeScreen } from './WelcomeScreen'
 export const dynamic = 'force-dynamic'
 
 export const metadata = {
-  title: 'Willkommen in der Herr Tech World',
+  title: 'Willkommen in der UPRO AI Lab World',
 }
 
 export default async function WelcomePage() {

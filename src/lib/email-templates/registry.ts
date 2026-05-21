@@ -65,7 +65,7 @@ export const TEMPLATES: TemplateDefinition[] = [
     group: 'invites',
     trigger:
       'Admin lädt User manuell ein — über /admin/users (einzeln, "Einladung senden") oder beim CSV-Import. Auch nach erfolgreichem Skool-Claim als zweite Mail mit Magic-Login-Link.',
-    preview: { firstName: 'Maria', loginLink: 'https://world.herr.tech/auth/callback?...' },
+    preview: { firstName: 'Maria', loginLink: 'https://lab.upro-capital.com/auth/callback?...' },
     variables: [
       { key: '{firstName}', description: 'Vorname (optional, "Hey {firstName}!" sonst "Hey!")' },
       { key: '{loginLink}', description: 'Magic-Login-Link mit Token (1× nutzbar)' },
@@ -85,14 +85,14 @@ export const TEMPLATES: TemplateDefinition[] = [
       { key: 'footer_note', label: 'Hinweis am Ende (Link-Fallback)', kind: 'textarea' },
     ],
     defaults: {
-      subject: 'Einladung in die Herr Tech World',
+      subject: 'Einladung in die UPRO AI Lab World',
       data: {
         eyebrow: 'Willkommen an Bord',
         headline_top: 'Deine Einladung in die',
-        headline_bottom: 'Herr Tech World.',
+        headline_bottom: 'UPRO AI Lab World.',
         greeting: 'Hey {firstName}!',
         intro_paragraph:
-          'Schön, dass du da bist. Du bist eingeladen in die <strong>Herr Tech World</strong> — deine KI-Plattform für Content, Business &amp; Wachstum.',
+          'Schön, dass du da bist. Du bist eingeladen in die <strong>UPRO AI Lab World</strong> — deine KI-Plattform für Content, Business &amp; Wachstum.',
         features_intro: 'Was dich erwartet:',
         cta_label: 'Jetzt einloggen',
         cta_caption: 'Ein Klick, und du bist drin. Kein Passwort, kein Formular.',
@@ -112,7 +112,7 @@ export const TEMPLATES: TemplateDefinition[] = [
     group: 'invites',
     trigger:
       'Bulk-Versand an Coming-Soon Newsletter-Signups via /admin/newsletter. Anders als Admin-Invite: persönlicherer Ton ("Du warst zuerst da"), Redirect auf /welcome statt /dashboard.',
-    preview: { loginLink: 'https://world.herr.tech/auth/callback?...' },
+    preview: { loginLink: 'https://lab.upro-capital.com/auth/callback?...' },
     variables: [
       { key: '{loginLink}', description: 'Magic-Login-Link mit Token (1× nutzbar)' },
     ],
@@ -132,17 +132,17 @@ export const TEMPLATES: TemplateDefinition[] = [
       { key: 'footer_note', label: 'Hinweis am Ende (Link-Fallback)', kind: 'textarea' },
     ],
     defaults: {
-      subject: '🚀 Die Herr Tech World ist offen für dich.',
+      subject: '🚀 Die UPRO AI Lab World ist offen für dich.',
       data: {
-        preheader: 'Die Herr Tech World ist offen für dich. Ein Klick und du bist drin.',
+        preheader: 'Die UPRO AI Lab World ist offen für dich. Ein Klick und du bist drin.',
         eyebrow: 'Es ist soweit',
         headline_top: 'Du warst zuerst da.',
         headline_bottom: 'Jetzt bist du drin.',
         greeting: 'Hey!',
         intro_paragraph:
-          'Du hast dich eingetragen, als wir noch nicht einmal live waren. Jetzt ist es soweit: Die <strong>Herr Tech World</strong> ist offen — und du bist einer der Ersten, die reindürfen.',
+          'Du hast dich eingetragen, als wir noch nicht einmal live waren. Jetzt ist es soweit: Die <strong>UPRO AI Lab World</strong> ist offen — und du bist einer der Ersten, die reindürfen.',
         features_intro: 'Was dich drinnen erwartet:',
-        cta_label: 'Jetzt in die Herr Tech World',
+        cta_label: 'Jetzt in die UPRO AI Lab World',
         cta_caption: 'Ein Klick, und du bist drin. Kein Passwort, kein Formular.',
         signature: 'Dein Flo',
         ps_text:
@@ -162,7 +162,7 @@ export const TEMPLATES: TemplateDefinition[] = [
       'Bulk-Einladung an aktive KI Marketing Club Mitglieder via /admin/community. Nach Klick auf den Link wird der Account aktiviert und der User automatisch eingeloggt (Magic-Login integriert). Token 30 Tage gültig.',
     preview: {
       firstName: 'Maria',
-      claimLink: 'https://world.herr.tech/invite/skool/abcd1234',
+      claimLink: 'https://lab.upro-capital.com/invite/skool/abcd1234',
       creditsPerMonth: 200,
     },
     variables: [
@@ -185,15 +185,15 @@ export const TEMPLATES: TemplateDefinition[] = [
       { key: 'footer_note', label: 'Hinweis am Ende', kind: 'textarea' },
     ],
     defaults: {
-      subject: 'Dein Zugang zur Herr Tech World — KI Marketing Club',
+      subject: 'Dein Zugang zur UPRO AI Lab World — KI Marketing Club',
       data: {
-        preheader: 'Dein Zugang zur Herr Tech World als KI Marketing Club Mitglied',
+        preheader: 'Dein Zugang zur UPRO AI Lab World als KI Marketing Club Mitglied',
         eyebrow: 'Exklusiv für Club-Mitglieder',
-        headline_top: 'Die Herr Tech World',
+        headline_top: 'Die UPRO AI Lab World',
         headline_bottom: 'wartet auf dich.',
         greeting: 'Hey {firstName}!',
         intro_paragraph:
-          'Als Mitglied im <strong>KI Marketing Club</strong> hast du ab sofort kostenlosen Zugriff auf die <strong>Herr Tech World</strong> — deine KI-Plattform mit Classroom, Chat-Agenten und der kompletten Toolbox (inkl. {creditsPerMonth} Credits/Monat).',
+          'Als Mitglied im <strong>KI Marketing Club</strong> hast du ab sofort kostenlosen Zugriff auf die <strong>UPRO AI Lab World</strong> — deine KI-Plattform mit Classroom, Chat-Agenten und der kompletten Toolbox (inkl. {creditsPerMonth} Credits/Monat).',
         intro_paragraph_2:
           'Der Zugang ist für dich <strong>gratis</strong>, solange du im Club bist.',
         cta_label: 'Jetzt Zugang aktivieren',
@@ -215,7 +215,7 @@ export const TEMPLATES: TemplateDefinition[] = [
       'Einladung für Ex-Club-Mitglieder via /admin/community (Status "alumni"). Nur lebenslanger Classroom-Zugang, kein Plan S. Nach Klick auf den Link wird der Account aktiviert und der User automatisch eingeloggt (Magic-Login integriert). Token 30 Tage gültig.',
     preview: {
       firstName: 'Maria',
-      claimLink: 'https://world.herr.tech/invite/skool/abcd1234',
+      claimLink: 'https://lab.upro-capital.com/invite/skool/abcd1234',
     },
     variables: [
       { key: '{firstName}', description: 'Vorname (optional)' },
@@ -236,7 +236,7 @@ export const TEMPLATES: TemplateDefinition[] = [
       { key: 'footer_note', label: 'Hinweis am Ende', kind: 'textarea' },
     ],
     defaults: {
-      subject: 'Dein Alumni-Zugang zur Herr Tech World — Classroom lebenslang',
+      subject: 'Dein Alumni-Zugang zur UPRO AI Lab World — Classroom lebenslang',
       data: {
         preheader: 'Dein lebenslanger Classroom-Zugang als Alumni des KI Marketing Club',
         eyebrow: 'Für Alumni des KI Marketing Club',
@@ -246,11 +246,11 @@ export const TEMPLATES: TemplateDefinition[] = [
         intro_paragraph:
           'Du warst Mitglied im <strong>KI Marketing Club</strong>. Auch wenn dein aktiver Zugang abgelaufen ist — die Inhalte, mit denen du gelernt hast, bleiben dir <strong>lebenslang erhalten</strong>.',
         intro_paragraph_2:
-          'In der <strong>Herr Tech World</strong> findest du als Alumni weiterhin freien Zugriff auf den kompletten <strong>Classroom</strong>: alle Lern-Module, alle Videos, jederzeit verfügbar.',
+          'In der <strong>UPRO AI Lab World</strong> findest du als Alumni weiterhin freien Zugriff auf den kompletten <strong>Classroom</strong>: alle Lern-Module, alle Videos, jederzeit verfügbar.',
         cta_label: 'Classroom-Zugang aktivieren',
         cta_caption: 'Einmal klicken, Account erstellen, fertig.',
         info_box:
-          'Wenn du wieder wöchentliche Live-Calls, Austausch und Feedback in der Community sowie vollen Zugriff auf KI-Coaches und Toolbox haben willst, kannst du jederzeit dem KI Marketing Club erneut beitreten — und holst dir damit auch deinen Vollzugang zur Herr Tech World zurück.',
+          'Wenn du wieder wöchentliche Live-Calls, Austausch und Feedback in der Community sowie vollen Zugriff auf KI-Coaches und Toolbox haben willst, kannst du jederzeit dem KI Marketing Club erneut beitreten — und holst dir damit auch deinen Vollzugang zur UPRO AI Lab World zurück.',
         footer_note:
           'Falls der Button nicht funktioniert, kopiere diesen Link: {claimLink} — Der Link ist 30 Tage gültig.',
       },
@@ -278,7 +278,7 @@ export const TEMPLATES: TemplateDefinition[] = [
       data: {
         heading: 'Deine Community-Mitgliedschaft ist beendet',
         intro:
-          'Hey,<br><br>dein Zugang zum KI Marketing Club wurde beendet — der Zugriff auf Herr Tech GPT und die KI Toolbox endet damit sofort.<br><br>Dein <strong>Classroom-Zugang bleibt dir als Alumni lebenslang erhalten</strong>. Du kannst jederzeit zu den regulären Preisen neu abschließen, wenn du wieder vollen Zugriff willst.',
+          'Hey,<br><br>dein Zugang zum KI Marketing Club wurde beendet — der Zugriff auf UPRO AI Lab und die KI Toolbox endet damit sofort.<br><br>Dein <strong>Classroom-Zugang bleibt dir als Alumni lebenslang erhalten</strong>. Du kannst jederzeit zu den regulären Preisen neu abschließen, wenn du wieder vollen Zugriff willst.',
         cta_label: 'Neuen Plan wählen',
         footer_note: 'Keine Sorge — du verlierst keine Daten. Wir freuen uns, wenn du wiederkommst.',
       },

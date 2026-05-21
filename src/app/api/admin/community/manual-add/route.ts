@@ -1,10 +1,10 @@
 /**
  * Manuelles Hinzufügen eines Community-Members.
  *
- * Für Skool-Mitglieder, die nicht über Stripe gekauft haben:
- *  - Admins (Cheten, Florian, Jacob)
+ * Für Community-Mitglieder, die nicht über Stripe gekauft haben:
+ *  - Admins (Doc)
  *  - Free-Mitglieder
- *  - Personen die Cheten manuell ins Skool gepackt hat
+ *  - Personen die der Admin manuell in die Community gepackt hat
  *
  * source='manual' → Sync-Job lässt diese Einträge in Ruhe.
  *

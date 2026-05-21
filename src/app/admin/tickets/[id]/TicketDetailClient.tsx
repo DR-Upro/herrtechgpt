@@ -350,7 +350,7 @@ function Bubble({ msg, userEmail }: { msg: Message; userEmail: string }) {
         <Bot size={14} />
       </div>
       <div className="flex-1 min-w-0">
-        <div className="text-[11px] font-semibold text-muted mb-1">Herr Tech KI</div>
+        <div className="text-[11px] font-semibold text-muted mb-1">UPRO AI Lab KI</div>
         <MarkdownContent content={msg.content} />
       </div>
     </div>

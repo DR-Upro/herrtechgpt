@@ -7,7 +7,7 @@ import { createClient } from '@/lib/supabase/client'
 import { useTheme } from '@/lib/theme-context'
 
 /**
- * Öffnet den Video-Creator auf dem Worker (vc.herr.tech) via SSO.
+ * Öffnet den Video-Creator auf dem Worker (vc.lab.upro-capital.com) via SSO.
  * Holt die aktuelle Supabase-Session und hängt zusätzlich Theme + Back-URL
  * ans URL-Fragment — der Worker nimmt sie ab, setzt seine Cookies, und
  * die Worker-UI erscheint im selben Theme und mit funktionierendem

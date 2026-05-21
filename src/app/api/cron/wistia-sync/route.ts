@@ -77,7 +77,7 @@ async function submitTranscription(audioUrl: string): Promise<string> {
     },
     body: JSON.stringify({
       audio_url: audioUrl,
-      speech_model: 'universal',
+      speech_models: ['universal-2'],
       language_code: 'de',
       punctuate: true,
       format_text: true,
@@ -140,7 +140,7 @@ Verfügbare Agenten:
 - funnel-monetization: Sales, Funnels, Leadgenerierung, E-Mail, LinkedIn
 - personal-growth: Mindset, Produktivität, persönliche Entwicklung
 - ai-prompt: Prompting, ChatGPT, KI-Workflows
-- herr-tech: KI-Tools, Automatisierung, n8n, Make, Tech-Setup
+- upro: KI-Tools, Automatisierung, n8n, Make, Tech-Setup
 - business-coach: Business-Strategie, Wachstum, Positionierung
 
 Antworte NUR mit valid JSON:
@@ -193,7 +193,7 @@ export async function GET(req: NextRequest) {
           if (agents.length > 0) {
             await supabase
               .from('knowledge_base')
-              .update({ source: ['wistia', ...agents].join(',') })
+              .update({ relevant_agents: agents })
               .eq('video_id', p.video_id)
           }
           videosCompleted += 1

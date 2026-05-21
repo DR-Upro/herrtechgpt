@@ -127,7 +127,7 @@ export default function SettingsManager({ initial }: Props) {
       >
         <TextField
           label="Community-URL"
-          hint="Vollständige URL inkl. https://. Beispiel: https://www.skool.com/herr-tech"
+          hint="Vollständige URL inkl. https://. Beispiel: https://www.skool.com/dein-community-slug"
           value={settings.communityUrl}
           onSave={(v) => save('communityUrl', v)}
           state={saveStates.communityUrl}
@@ -345,7 +345,7 @@ function TextField({
             onKeyDown={(e) => {
               if (e.key === 'Enter') (e.target as HTMLInputElement).blur()
             }}
-            placeholder="https://www.skool.com/herr-tech"
+            placeholder="https://www.skool.com/dein-community-slug"
             className="flex-1 max-w-xl px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 font-mono"
           />
           <SaveStatus state={state} error={error} inline />

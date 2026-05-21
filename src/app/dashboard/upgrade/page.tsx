@@ -9,7 +9,7 @@ type Feature = 'chat' | 'classroom' | 'toolbox' | 'default'
 
 const FEATURE_COPY: Record<Feature, { title: string; lead: string; items: { emoji: string; text: string }[] }> = {
   chat: {
-    title: 'Herr Tech GPT — nur für Community-Mitglieder',
+    title: 'UPRO AI Lab — nur für Community-Mitglieder',
     lead: 'Die 6 spezialisierten KI-Agenten mit dem gesamten Wissen aus allen Lernvideos sind exklusiv für Mitglieder des KI Marketing Club.',
     items: [
       { emoji: '🎯', text: 'Content & Hook Agent' },
@@ -17,7 +17,7 @@ const FEATURE_COPY: Record<Feature, { title: string; lead: string; items: { emoj
       { emoji: '🔧', text: 'KI-Prompt-Agent' },
       { emoji: '🧠', text: 'Business-Coaching' },
       { emoji: '💛', text: 'Personal Growth Coach' },
-      { emoji: '🚀', text: 'Standard "Herr Tech" Agent' },
+      { emoji: '🚀', text: 'Standard "UPRO AI Lab" Agent' },
     ],
   },
   classroom: {

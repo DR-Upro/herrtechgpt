@@ -27,7 +27,7 @@ interface Props {
 }
 
 const DEFAULT_BENEFITS = [
-  'Herr Tech GPT — alle 6 KI-Coaches',
+  'UPRO AI Lab — alle 6 KI-Coaches',
   'Classroom — alle Lern-Module',
   'KI Toolbox — Carousel, Video-Editor, Video-Creator',
   'Monatliche Credits + Live Calls',

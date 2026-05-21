@@ -109,7 +109,7 @@ function ConversationItem({ conv, isActive }: { conv: Conversation; isActive: bo
     const supabase = createClient()
     await supabase.from('conversations').delete().eq('id', conv.id)
     setMenuOpen(false)
-    router.push('/dashboard/herr-tech-gpt')
+    router.push('/dashboard/ai-workspace')
     router.refresh()
   }
 
@@ -134,7 +134,7 @@ function ConversationItem({ conv, isActive }: { conv: Conversation; isActive: bo
   return (
     <div className="group relative flex items-center">
       <Link
-        href={`/dashboard/herr-tech-gpt/${conv.id}`}
+        href={`/dashboard/ai-workspace/${conv.id}`}
         className={`flex-1 min-w-0 flex items-center gap-3 px-3 py-2 rounded-[var(--radius-md)] text-sm transition-colors pr-8 ${
           isActive
             ? 'bg-primary/10 text-foreground font-medium'
@@ -434,8 +434,8 @@ function MainSidebar({
         />
         <NavItem
           icon={Bot}
-          label="Herr Tech GPT"
-          isActive={pathname.startsWith('/dashboard/herr-tech-gpt')}
+          label="UPRO AI Lab"
+          isActive={pathname.startsWith('/dashboard/ai-workspace')}
           locked={chatLocked}
           comingSoon={chatComingSoon}
           onClick={() => (chatLocked || chatComingSoon) ? undefined : onDrillDown('chat')}
@@ -614,7 +614,7 @@ function ChatSidebar({
         .single()
 
       if (conv) {
-        router.push(`/dashboard/herr-tech-gpt/${conv.id}`)
+        router.push(`/dashboard/ai-workspace/${conv.id}`)
       }
     } catch (e) {
       console.error('Chat start error:', e)
@@ -637,7 +637,7 @@ function ChatSidebar({
       {/* New Chat */}
       <div className="px-3 pt-4 pb-2">
         <Link
-          href="/dashboard/herr-tech-gpt"
+          href="/dashboard/ai-workspace"
           className="btn-primary w-full justify-center"
         >
           <Plus size={16} />
@@ -1388,7 +1388,7 @@ export function Sidebar({ conversations, userEmail, userName, isAdmin, realIsAdm
   // Determine sidebar mode from URL
   const autoMode = useMemo<SidebarMode>(() => {
     if (pathname.startsWith('/admin')) return 'admin'
-    if (pathname.startsWith('/dashboard/herr-tech-gpt')) return 'chat'
+    if (pathname.startsWith('/dashboard/ai-workspace')) return 'chat'
     if (pathname.startsWith('/dashboard/classroom')) return 'classroom'
     if (pathname.startsWith('/dashboard/ki-toolbox')) return 'toolbox'
     if (pathname.startsWith('/dashboard/help')) return 'help'
@@ -1404,7 +1404,7 @@ export function Sidebar({ conversations, userEmail, userName, isAdmin, realIsAdm
 
   const handleDrillDown = (newMode: SidebarMode) => {
     setMode(newMode)
-    if (newMode === 'chat') router.push('/dashboard/herr-tech-gpt')
+    if (newMode === 'chat') router.push('/dashboard/ai-workspace')
     if (newMode === 'admin') router.push('/admin')
     if (newMode === 'classroom') router.push('/dashboard/classroom')
     if (newMode === 'toolbox') router.push('/dashboard/ki-toolbox')
@@ -1438,8 +1438,8 @@ export function Sidebar({ conversations, userEmail, userName, isAdmin, realIsAdm
       <div className="px-5 pt-5 pb-4 flex items-center">
         <Link href="/dashboard" className="block">
           <img
-            src="/logo.png"
-            alt="Herr Tech"
+            src="/logo.svg"
+            alt="UPRO AI Lab"
             className="h-6 w-auto object-contain"
           />
         </Link>

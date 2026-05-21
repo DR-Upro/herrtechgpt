@@ -46,7 +46,7 @@ export async function POST(req: Request) {
 
   const generalAgent = {
     id: 'general',
-    systemPrompt: 'Du bist Herr Tech — ein hilfreicher KI-Assistent für Creator und Online-Unternehmer im deutschsprachigen Raum. Du hilfst bei allen Themen rund um Online Business, KI-Tools, Content, Marketing und persönliches Wachstum. Antworte direkt, praxisnah und auf Deutsch.',
+    systemPrompt: 'Du bist UPRO AI Lab — ein hilfreicher KI-Assistent für Creator und Online-Unternehmer im deutschsprachigen Raum. Du hilfst bei allen Themen rund um Online Business, KI-Tools, Content, Marketing und persönliches Wachstum. Antworte direkt, praxisnah und auf Deutsch.',
   }
 
   const agent = agentId === 'general' ? generalAgent : getAgent(agentId)
@@ -199,7 +199,7 @@ export async function POST(req: Request) {
 
   const deprecationContext = deprecationPromptBlock(agentId)
 
-  // HerrTech Tech-Stack: injiziere erlaubte Tools pro Agent (via core_tools Tabelle)
+  // UPRO AI Lab Tech-Stack: injiziere erlaubte Tools pro Agent (via core_tools Tabelle)
   const toolsContext = await buildToolsBlock(supabase, agentId)
 
   const fullSystemPrompt =

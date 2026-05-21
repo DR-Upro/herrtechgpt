@@ -124,7 +124,7 @@ export default async function LearningPathPage() {
               {recommendedAgents.map(({ agent, why }) => (
                 <Link
                   key={agent!.id}
-                  href={`/dashboard/herr-tech-gpt?agent=${agent!.id}`}
+                  href={`/dashboard/ai-workspace?agent=${agent!.id}`}
                   className="group flex gap-3 p-4 rounded-xl border border-border bg-surface hover:border-primary/40 hover:shadow-sm transition-all"
                 >
                   <div className="w-10 h-10 rounded-lg bg-surface-secondary flex items-center justify-center text-xl shrink-0">

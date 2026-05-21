@@ -19,7 +19,7 @@ export default async function SkoolClaimPage({
     return (
       <div className="min-h-screen flex items-center justify-center bg-background px-4">
         <div className="bg-surface p-8 rounded-2xl shadow-sm border border-border w-full max-w-md text-center">
-          <img src="/logo.png" alt="Herr Tech" className="h-8 w-auto mx-auto mb-6" />
+          <img src="/logo.svg" alt="UPRO AI Lab" className="h-8 w-auto mx-auto mb-6" />
           <h1 className="text-xl font-bold text-foreground mb-3">
             Einladung ungültig oder abgelaufen
           </h1>
@@ -51,14 +51,14 @@ export default async function SkoolClaimPage({
     <div className="min-h-screen flex items-center justify-center bg-background px-4">
       <div className="bg-surface p-8 rounded-2xl shadow-sm border border-border w-full max-w-md">
         <div className="text-center mb-6">
-          <img src="/logo.png" alt="Herr Tech" className="h-8 w-auto mx-auto mb-4" />
+          <img src="/logo.svg" alt="UPRO AI Lab" className="h-8 w-auto mx-auto mb-4" />
           <div className="text-xs uppercase tracking-wider text-primary font-semibold">
             KI Marketing Club
           </div>
           <h1 className="text-xl font-bold text-foreground mt-2">
             {alreadyClaimed
               ? 'Willkommen zurück'
-              : 'Dein Zugang zur Herr Tech World'}
+              : 'Dein Zugang zur UPRO AI Lab World'}
           </h1>
         </div>
 

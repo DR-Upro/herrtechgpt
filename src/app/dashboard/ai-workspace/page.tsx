@@ -6,7 +6,7 @@ import { listedAgents as agents } from '@/lib/agents'
 import { createClient } from '@/lib/supabase/client'
 import { ArrowRight, Loader2, MessageSquare, Send } from 'lucide-react'
 
-export default function HerrTechGptPage() {
+export default function AiWorkspacePage() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [loading, setLoading] = useState<string | null>(null)
@@ -33,8 +33,8 @@ export default function HerrTechGptPage() {
 
       if (conv) {
         const url = initMessage
-          ? `/dashboard/herr-tech-gpt/${conv.id}?init=${encodeURIComponent(initMessage)}`
-          : `/dashboard/herr-tech-gpt/${conv.id}`
+          ? `/dashboard/ai-workspace/${conv.id}?init=${encodeURIComponent(initMessage)}`
+          : `/dashboard/ai-workspace/${conv.id}`
         router.push(url)
       }
     } catch (e) {
@@ -57,8 +57,8 @@ export default function HerrTechGptPage() {
   // Smart routing: determine best agent from user input
   const handleSmartStart = () => {
     if (!inputText.trim()) return
-    // Default to herr-tech agent, could be enhanced with AI routing
-    startChat('herr-tech', inputText)
+    // Default to upro agent, could be enhanced with AI routing
+    startChat('upro', inputText)
   }
 
   return (
@@ -66,7 +66,7 @@ export default function HerrTechGptPage() {
       {/* Centered Welcome + Smart Input */}
       <div className="w-full max-w-3xl text-center mb-10">
         <h1 className="text-2xl sm:text-3xl font-bold text-foreground mb-2">
-          Herr Tech GPT
+          UPRO AI Lab
         </h1>
         <p className="text-muted text-sm sm:text-base mb-6">
           Sag mir was du brauchst — ich leite dich zum passenden Agenten.
@@ -88,7 +88,7 @@ export default function HerrTechGptPage() {
             disabled={!inputText.trim() || !!loading}
             className="btn-primary px-3 py-2 disabled:opacity-40"
           >
-            {loading === 'herr-tech' ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
+            {loading === 'upro' ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
           </button>
         </div>
       </div>

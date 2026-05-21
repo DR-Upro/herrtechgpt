@@ -1,6 +1,6 @@
 import { SkeletonBar, SkeletonCard } from '@/components/skeletons'
 
-export default function HerrTechGptLoading() {
+export default function AiWorkspaceLoading() {
   return (
     <div className="flex flex-col items-center justify-center min-h-[calc(100vh-120px)] px-4 sm:px-6 py-6 sm:py-10">
       <div className="w-full max-w-3xl text-center mb-10">

@@ -1,3 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 786.61 786.44">
-  <path fill="#B598E2" d="M183.5,0v786.44H0V0h183.5ZM786.61,0v786.31h-183.5v-347.31h-153.04l-266.56,177.17,108.51-268.72c14.43-40.61,46.82-66.71,87.74-66.98l223.36-1.57V0h183.5Z"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="8" fill="#050505"/>
+  <text x="50%" y="50%"
+        text-anchor="middle"
+        dominant-baseline="central"
+        font-family="Georgia, serif"
+        font-weight="300"
+        font-size="38"
+        fill="#F5F0EB"
+        letter-spacing="-1">U</text>
+  <circle cx="48" cy="46" r="4" fill="#C9A04A"/>
 </svg>

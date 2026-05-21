@@ -43,7 +43,7 @@ export function resolveToolboxIcon(name: string | null | undefined): LucideIcon 
 }
 
 export const TOOLBOX_ICON_BG_PRESETS: { value: string; label: string }[] = [
-  { value: 'bg-gradient-to-br from-primary to-primary-hover', label: 'Lila (Primary)' },
+  { value: 'bg-gradient-to-br from-primary to-primary-hover', label: 'Gold (Primary)' },
   { value: 'bg-gradient-to-br from-pink-500 to-rose-600', label: 'Pink' },
   { value: 'bg-gradient-to-br from-blue-500 to-indigo-600', label: 'Blau' },
   { value: 'bg-gradient-to-br from-emerald-500 to-teal-600', label: 'Grün' },

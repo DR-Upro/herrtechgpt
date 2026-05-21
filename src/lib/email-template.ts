@@ -1,5 +1,5 @@
-// Gemeinsames HTML-Layout für alle ausgehenden Herr-Tech-World-Mails.
-// Konsistentes Branding: Logo zentriert, Primärfarbe #B598E2, kleiner Fallback-Link.
+// Gemeinsames HTML-Layout für alle ausgehenden UPRO-AI-Lab-Mails.
+// Konsistentes Branding: Logo zentriert, Primärfarbe #C9A04A, kleiner Fallback-Link.
 //
 // Texte werden über die Registry (src/lib/email-templates/registry.ts) und die
 // DB-Tabelle email_templates editierbar gehalten. Die HTML-Struktur (Layout,
@@ -8,7 +8,10 @@
 import { PRODUCTION_URL } from './urls'
 import { applyVariables } from './email-templates/registry'
 
-const LOGO_URL = 'https://kgolrqjkghhwdgoeyppt.supabase.co/storage/v1/object/public/lesson-images/brand/logo.png'
+// TODO Production: Logo nach R2/Supabase-Storage uploaden und URL hier eintragen.
+// Lokal nutzen wir den Pfad auf der eigenen Domain (rendert nur wenn das Mail-
+// Client den Host erreichen kann).
+const LOGO_URL = `${PRODUCTION_URL}/logo.svg`
 
 export interface EmailCta {
   label: string
@@ -50,13 +53,13 @@ export function renderEmail(opts: RenderEmailOptions): string {
             <tr>
               <td align="center" style="padding:24px 32px; background:#FDFBF7; border-bottom:1px solid #EEE8E0;">
                 <a href="${siteUrl}" style="text-decoration:none;">
-                  <img src="${LOGO_URL}" alt="Herr Tech World" height="26" style="display:block; height:26px; width:auto; margin:0 auto;">
+                  <img src="${LOGO_URL}" alt="UPRO AI Lab World" height="26" style="display:block; height:26px; width:auto; margin:0 auto;">
                 </a>
               </td>
             </tr>
             <tr>
               <td align="center" style="padding:28px 32px 8px;">
-                <h1 style="margin:0 0 12px; font-size:22px; line-height:1.3; color:#0F0F13; font-weight:700; text-align:center;">
+                <h1 style="margin:0 0 12px; font-size:22px; line-height:1.3; color:#050505; font-weight:700; text-align:center;">
                   ${escapeHtml(opts.heading)}
                 </h1>
                 <div style="font-size:15px; line-height:1.6; color:#444; text-align:center;">
@@ -68,7 +71,7 @@ export function renderEmail(opts: RenderEmailOptions): string {
             <tr>
               <td align="center" style="padding:16px 32px 8px;">
                 <a href="${opts.cta.href}"
-                   style="display:inline-block; background:#B598E2; color:#FFFFFF; padding:12px 28px;
+                   style="display:inline-block; background:#C9A04A; color:#FFFFFF; padding:12px 28px;
                           border-radius:10px; text-decoration:none; font-weight:600; font-size:15px;">
                   ${escapeHtml(opts.cta.label)}
                 </a>
@@ -85,8 +88,8 @@ export function renderEmail(opts: RenderEmailOptions): string {
             <tr>
               <td align="center" style="padding:24px 32px 28px; border-top:1px solid #EEE8E0;">
                 <div style="font-size:12px; line-height:1.5; color:#999; text-align:center;">
-                  Herr Tech World — Deine KI-Plattform für Content, Business &amp; Wachstum.<br>
-                  <a href="${siteUrl}" style="color:#B598E2; text-decoration:none;">${siteUrl.replace(/^https?:\/\//, '')}</a>
+                  UPRO AI Lab World — Deine KI-Plattform für Content, Business &amp; Wachstum.<br>
+                  <a href="${siteUrl}" style="color:#C9A04A; text-decoration:none;">${siteUrl.replace(/^https?:\/\//, '')}</a>
                 </div>
               </td>
             </tr>
@@ -113,7 +116,7 @@ function renderHeader(siteUrl: string): string {
     <tr>
       <td align="center" style="padding:24px 32px; background:#FDFBF7; border-bottom:1px solid #EEE8E0;">
         <a href="${siteUrl}" style="text-decoration:none;">
-          <img src="${LOGO_URL}" alt="Herr Tech World" height="26" style="display:block; height:26px; width:auto; margin:0 auto;">
+          <img src="${LOGO_URL}" alt="UPRO AI Lab World" height="26" style="display:block; height:26px; width:auto; margin:0 auto;">
         </a>
       </td>
     </tr>`
@@ -124,8 +127,8 @@ function renderFooter(siteUrl: string): string {
     <tr>
       <td align="center" style="padding:16px 32px 24px; border-top:1px solid #EEE8E0;">
         <div style="font-size:12px; line-height:1.5; color:#999; text-align:center;">
-          Herr Tech World — Deine KI-Plattform für Content, Business &amp; Wachstum.<br>
-          <a href="${siteUrl}" style="color:#B598E2; text-decoration:none;">${siteUrl.replace(/^https?:\/\//, '')}</a>
+          UPRO AI Lab World — Deine KI-Plattform für Content, Business &amp; Wachstum.<br>
+          <a href="${siteUrl}" style="color:#C9A04A; text-decoration:none;">${siteUrl.replace(/^https?:\/\//, '')}</a>
         </div>
       </td>
     </tr>`
@@ -165,12 +168,12 @@ export function renderNewsletterInviteEmail(opts: NewsletterInviteOptions): stri
 
             <tr>
               <td align="left" style="padding:36px 36px 8px;">
-                <div style="font-size:12px; letter-spacing:0.18em; text-transform:uppercase; color:#B598E2; font-weight:700; margin-bottom:16px;">
+                <div style="font-size:12px; letter-spacing:0.18em; text-transform:uppercase; color:#C9A04A; font-weight:700; margin-bottom:16px;">
                   ${escapeHtml(applyVariables(c.eyebrow ?? '', vars))}
                 </div>
-                <h1 style="margin:0 0 16px; font-size:30px; line-height:1.15; color:#0F0F13; font-weight:800; letter-spacing:-0.01em;">
+                <h1 style="margin:0 0 16px; font-size:30px; line-height:1.15; color:#050505; font-weight:800; letter-spacing:-0.01em;">
                   ${escapeHtml(applyVariables(c.headline_top ?? '', vars))}<br>
-                  <span style="color:#B598E2;">${escapeHtml(applyVariables(c.headline_bottom ?? '', vars))}</span>
+                  <span style="color:#C9A04A;">${escapeHtml(applyVariables(c.headline_bottom ?? '', vars))}</span>
                 </h1>
                 <p style="margin:0 0 14px; font-size:16px; line-height:1.6; color:#333;">
                   ${applyVariables(c.greeting ?? '', vars)}
@@ -189,7 +192,7 @@ export function renderNewsletterInviteEmail(opts: NewsletterInviteOptions): stri
                 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                   <tr><td style="padding:8px 0; font-size:15px; line-height:1.5; color:#333;">🎬&nbsp;&nbsp;<strong>KI Video Creator</strong> — du tippst, die KI dreht.</td></tr>
                   <tr><td style="padding:8px 0; font-size:15px; line-height:1.5; color:#333;">🎨&nbsp;&nbsp;<strong>Karussell-Generator</strong> — ein Klick, Instagram-Post fertig.</td></tr>
-                  <tr><td style="padding:8px 0; font-size:15px; line-height:1.5; color:#333;">🤖&nbsp;&nbsp;<strong>6 KI-Coaches</strong> trainiert auf Herr Techs Inhalten.</td></tr>
+                  <tr><td style="padding:8px 0; font-size:15px; line-height:1.5; color:#333;">🤖&nbsp;&nbsp;<strong>6 KI-Coaches</strong> trainiert auf UPRO AI Labs Inhalten.</td></tr>
                   <tr><td style="padding:8px 0; font-size:15px; line-height:1.5; color:#333;">🎓&nbsp;&nbsp;<strong>Classroom</strong> mit allen Lern-Modulen.</td></tr>
                 </table>
               </td>
@@ -198,7 +201,7 @@ export function renderNewsletterInviteEmail(opts: NewsletterInviteOptions): stri
             <tr>
               <td align="center" style="padding:8px 36px 12px;">
                 <a href="${opts.loginLink}"
-                   style="display:inline-block; background:#B598E2; color:#FFFFFF; padding:16px 40px;
+                   style="display:inline-block; background:#C9A04A; color:#FFFFFF; padding:16px 40px;
                           border-radius:12px; text-decoration:none; font-weight:700; font-size:16px;">
                   ${escapeHtml(applyVariables(c.cta_label ?? '', vars))}
                 </a>
@@ -262,11 +265,11 @@ export function renderInviteEmail(opts: InviteEmailOptions): string {
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Willkommen in der Herr Tech World</title>
+    <title>Willkommen in der UPRO AI Lab World</title>
   </head>
   <body style="margin:0; padding:0; background:#F5F0EB; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
     <span style="display:none; max-height:0; overflow:hidden; color:transparent;">
-      Deine Einladung in die Herr Tech World — ein Klick und du bist drin.
+      Deine Einladung in die UPRO AI Lab World — ein Klick und du bist drin.
     </span>
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#F5F0EB;">
       <tr>
@@ -276,12 +279,12 @@ export function renderInviteEmail(opts: InviteEmailOptions): string {
 
             <tr>
               <td align="left" style="padding:36px 36px 8px;">
-                <div style="font-size:12px; letter-spacing:0.18em; text-transform:uppercase; color:#B598E2; font-weight:700; margin-bottom:16px;">
+                <div style="font-size:12px; letter-spacing:0.18em; text-transform:uppercase; color:#C9A04A; font-weight:700; margin-bottom:16px;">
                   ${escapeHtml(applyVariables(c.eyebrow ?? '', vars))}
                 </div>
-                <h1 style="margin:0 0 16px; font-size:30px; line-height:1.15; color:#0F0F13; font-weight:800; letter-spacing:-0.01em;">
+                <h1 style="margin:0 0 16px; font-size:30px; line-height:1.15; color:#050505; font-weight:800; letter-spacing:-0.01em;">
                   ${escapeHtml(applyVariables(c.headline_top ?? '', vars))}<br>
-                  <span style="color:#B598E2;">${escapeHtml(applyVariables(c.headline_bottom ?? '', vars))}</span>
+                  <span style="color:#C9A04A;">${escapeHtml(applyVariables(c.headline_bottom ?? '', vars))}</span>
                 </h1>
                 <p style="margin:0 0 14px; font-size:16px; line-height:1.6; color:#333;">
                   ${greeting}
@@ -300,7 +303,7 @@ export function renderInviteEmail(opts: InviteEmailOptions): string {
                 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                   <tr><td style="padding:8px 0; font-size:15px; line-height:1.5; color:#333;">🎬&nbsp;&nbsp;<strong>KI Video Creator</strong> — du tippst, die KI dreht.</td></tr>
                   <tr><td style="padding:8px 0; font-size:15px; line-height:1.5; color:#333;">🎨&nbsp;&nbsp;<strong>Karussell-Generator</strong> — ein Klick, Instagram-Post fertig.</td></tr>
-                  <tr><td style="padding:8px 0; font-size:15px; line-height:1.5; color:#333;">🤖&nbsp;&nbsp;<strong>6 KI-Coaches</strong> trainiert auf Herr Techs Inhalten.</td></tr>
+                  <tr><td style="padding:8px 0; font-size:15px; line-height:1.5; color:#333;">🤖&nbsp;&nbsp;<strong>6 KI-Coaches</strong> trainiert auf UPRO AI Labs Inhalten.</td></tr>
                   <tr><td style="padding:8px 0; font-size:15px; line-height:1.5; color:#333;">🎓&nbsp;&nbsp;<strong>Classroom</strong> mit über 170 h Lernmaterial.</td></tr>
                 </table>
               </td>
@@ -309,7 +312,7 @@ export function renderInviteEmail(opts: InviteEmailOptions): string {
             <tr>
               <td align="center" style="padding:8px 36px 12px;">
                 <a href="${opts.loginLink}"
-                   style="display:inline-block; background:#B598E2; color:#FFFFFF; padding:16px 40px;
+                   style="display:inline-block; background:#C9A04A; color:#FFFFFF; padding:16px 40px;
                           border-radius:12px; text-decoration:none; font-weight:700; font-size:16px;">
                   ${escapeHtml(applyVariables(c.cta_label ?? '', vars))}
                 </a>
@@ -380,7 +383,7 @@ export function renderSkoolInviteEmail(opts: SkoolInviteOptions): string {
       <tr><td style="padding:8px 0; font-size:15px; line-height:1.5; color:#666;">🔒&nbsp;&nbsp;<strong>KI-Coaches &amp; Toolbox</strong> — exklusiv für aktive Club-Mitglieder.</td></tr>`
     : `
       <tr><td style="padding:8px 0; font-size:15px; line-height:1.5; color:#333;">🎓&nbsp;&nbsp;<strong>Classroom</strong> — alle Lern-Module, alle Videos.</td></tr>
-      <tr><td style="padding:8px 0; font-size:15px; line-height:1.5; color:#333;">🤖&nbsp;&nbsp;<strong>6 KI-Coaches</strong>, trainiert auf Herr Techs Inhalten.</td></tr>
+      <tr><td style="padding:8px 0; font-size:15px; line-height:1.5; color:#333;">🤖&nbsp;&nbsp;<strong>6 KI-Coaches</strong>, trainiert auf UPRO AI Labs Inhalten.</td></tr>
       <tr><td style="padding:8px 0; font-size:15px; line-height:1.5; color:#333;">🎨&nbsp;&nbsp;<strong>Toolbox</strong> — Karussells, Video-Editor, Video-Creator.</td></tr>`
 
   return `<!DOCTYPE html>
@@ -388,7 +391,7 @@ export function renderSkoolInviteEmail(opts: SkoolInviteOptions): string {
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>${isAlumni ? 'Dein Alumni-Zugang zur Herr Tech World' : 'Dein Zugang zur Herr Tech World'}</title>
+    <title>${isAlumni ? 'Dein Alumni-Zugang zur UPRO AI Lab World' : 'Dein Zugang zur UPRO AI Lab World'}</title>
   </head>
   <body style="margin:0; padding:0; background:#F5F0EB; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
     <span style="display:none; max-height:0; overflow:hidden; color:transparent;">
@@ -402,12 +405,12 @@ export function renderSkoolInviteEmail(opts: SkoolInviteOptions): string {
 
             <tr>
               <td align="left" style="padding:36px 36px 8px;">
-                <div style="font-size:12px; letter-spacing:0.18em; text-transform:uppercase; color:#B598E2; font-weight:700; margin-bottom:16px;">
+                <div style="font-size:12px; letter-spacing:0.18em; text-transform:uppercase; color:#C9A04A; font-weight:700; margin-bottom:16px;">
                   ${escapeHtml(applyVariables(c.eyebrow ?? '', vars))}
                 </div>
-                <h1 style="margin:0 0 16px; font-size:28px; line-height:1.2; color:#0F0F13; font-weight:800; letter-spacing:-0.01em;">
+                <h1 style="margin:0 0 16px; font-size:28px; line-height:1.2; color:#050505; font-weight:800; letter-spacing:-0.01em;">
                   ${escapeHtml(applyVariables(c.headline_top ?? '', vars))}<br>
-                  <span style="color:#B598E2;">${escapeHtml(applyVariables(c.headline_bottom ?? '', vars))}</span>
+                  <span style="color:#C9A04A;">${escapeHtml(applyVariables(c.headline_bottom ?? '', vars))}</span>
                 </h1>
                 <p style="margin:0 0 14px; font-size:16px; line-height:1.6; color:#333;">
                   ${greeting}
@@ -433,7 +436,7 @@ export function renderSkoolInviteEmail(opts: SkoolInviteOptions): string {
             <tr>
               <td align="center" style="padding:8px 36px 12px;">
                 <a href="${opts.claimLink}"
-                   style="display:inline-block; background:#B598E2; color:#FFFFFF; padding:16px 40px;
+                   style="display:inline-block; background:#C9A04A; color:#FFFFFF; padding:16px 40px;
                           border-radius:12px; text-decoration:none; font-weight:700; font-size:16px;">
                   ${escapeHtml(applyVariables(c.cta_label ?? '', vars))}
                 </a>

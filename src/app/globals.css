@@ -6,21 +6,25 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 /* ═══════════════════════════════════════════════════════════
-   HERR TECH DESIGN SYSTEM
+   UPRO AI LAB DESIGN SYSTEM
+
+   Brand-Palette aus UPRO Capital Hub: Deep Black + Cream + Gold.
+   `--ht-*` Token-Namen bleiben aus Migrations-Gründen erhalten,
+   die Werte sind auf UPRO umgeschwenkt.
 
    Approach: @theme references CSS custom properties.
    :root sets light values, html.dark overrides them.
-   This guarantees dark mode works with Tailwind v4.
    ═══════════════════════════════════════════════════════════ */
 
 /* ── Color definitions (light = default) ─────────────────── */
 :root {
   --ht-background: #F5F0EB;
-  --ht-foreground: #1a1a1a;
-  --ht-primary: #B598E2;
-  --ht-primary-hover: #9b51e0;
-  --ht-primary-light: #B598E220;
-  --ht-primary-glow: #B598E210;
+  --ht-foreground: #050505;
+  --ht-primary: #C9A04A;
+  --ht-primary-hover: #B08A3A;
+  --ht-primary-light: #C9A04A20;
+  --ht-primary-glow: #C9A04A10;
+  --ht-accent-lab: #2EB6C9;
   --ht-surface: #FFFFFF;
   --ht-surface-secondary: #FAF7F4;
   --ht-surface-hover: #F0EBE5;
@@ -42,21 +46,22 @@
 
 /* ── Dark mode overrides ─────────────────────────────────── */
 html.dark {
-  --ht-background: #0F0F13;
-  --ht-foreground: #E8E4E0;
-  --ht-primary: #B598E2;
-  --ht-primary-hover: #C9B2F0;
-  --ht-primary-light: #B598E225;
-  --ht-primary-glow: #B598E215;
-  --ht-surface: #1A1A23;
-  --ht-surface-secondary: #16161E;
-  --ht-surface-hover: #22222D;
-  --ht-border: #2A2A35;
-  --ht-border-light: #222230;
-  --ht-muted: #8A8A9A;
-  --ht-muted-light: #5A5A6A;
-  --ht-card-hover: #1E1E28;
-  --ht-glass: #1A1A2380;
+  --ht-background: #0D0D0D;
+  --ht-foreground: #EBE8E0;
+  --ht-primary: #E5B97A;
+  --ht-primary-hover: #F0CB95;
+  --ht-primary-light: #E5B97A25;
+  --ht-primary-glow: #E5B97A15;
+  --ht-accent-lab: #5BD4E6;
+  --ht-surface: #1A1A1A;
+  --ht-surface-secondary: #131313;
+  --ht-surface-hover: #232323;
+  --ht-border: #2A2A2A;
+  --ht-border-light: #222222;
+  --ht-muted: #8A8A8A;
+  --ht-muted-light: #5A5A5A;
+  --ht-card-hover: #1E1E1E;
+  --ht-glass: #1A1A1A80;
   --ht-success: #34D399;
   --ht-warning: #FBBF24;
   --ht-danger: #F87171;
@@ -75,6 +80,7 @@ html.dark {
   --color-primary-hover: var(--ht-primary-hover);
   --color-primary-light: var(--ht-primary-light);
   --color-primary-glow: var(--ht-primary-glow);
+  --color-accent-lab: var(--ht-accent-lab);
   --color-surface: var(--ht-surface);
   --color-surface-secondary: var(--ht-surface-secondary);
   --color-surface-hover: var(--ht-surface-hover);

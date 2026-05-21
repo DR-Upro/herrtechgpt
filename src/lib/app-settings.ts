@@ -34,7 +34,7 @@ export const APP_SETTINGS_DEFAULTS: AppSettings = {
   subscriptionsEnabled: false,
   communityMonthlyCredits: 200,
   starterTestCredits: 0,
-  communityUrl: 'https://www.skool.com/herr-tech',
+  communityUrl: 'https://www.skool.com/dein-community-slug',
 }
 
 // Mapping: TS-Camel → DB-Snake-Key

@@ -280,7 +280,7 @@ export default function BillingClient({
                   KI Marketing Club — Community-Mitglied
                 </div>
                 <div className="text-sm text-muted mt-1">
-                  Voller Zugriff auf Herr Tech GPT, Classroom, KI Toolbox und Live Calls.
+                  Voller Zugriff auf UPRO AI Lab, Classroom, KI Toolbox und Live Calls.
                 </div>
               </div>
             </div>
@@ -334,12 +334,12 @@ export default function BillingClient({
               </h2>
               <p className="text-sm text-muted leading-relaxed mb-4 max-w-xl">
                 Werde Teil der Community und bekomme Zugriff auf alle KI-Agenten,
-                über 170 h Lernvideos, wöchentliche Live-Calls mit Herr Tech und
+                über 170 h Lernvideos, wöchentliche Live-Calls mit UPRO AI Lab und
                 exklusive Inhalte.
               </p>
               <ul className="grid grid-cols-1 sm:grid-cols-2 gap-y-1.5 gap-x-4 mb-2">
                 {[
-                  'Wöchentliche Live-Calls mit Herr Tech',
+                  'Wöchentliche Live-Calls mit UPRO AI Lab',
                   'Community, Austausch & direktes Feedback',
                   'Über 170 h Lernvideos & exklusive Inhalte',
                   'Alle 6 KI-Agenten inkl. monatliche Credits',
@@ -397,8 +397,8 @@ export default function BillingClient({
                 </div>
                 <div className="text-sm text-muted mt-1">
                   {subscriptionsEnabled
-                    ? 'Schließe einen Plan ab, um Herr Tech GPT + KI Toolbox zu nutzen.'
-                    : 'Werde Community-Mitglied für vollen Zugriff auf Herr Tech GPT, Classroom + monatliche Credits.'}
+                    ? 'Schließe einen Plan ab, um UPRO AI Lab + KI Toolbox zu nutzen.'
+                    : 'Werde Community-Mitglied für vollen Zugriff auf UPRO AI Lab, Classroom + monatliche Credits.'}
                 </div>
               </div>
             )}
@@ -593,7 +593,7 @@ export default function BillingClient({
               <div>
                 <h3 className="text-lg font-semibold text-foreground">Abo kündigen?</h3>
                 <p className="text-sm text-muted mt-1">
-                  Dein Zugriff auf Herr Tech GPT + KI Toolbox läuft bis zum{' '}
+                  Dein Zugriff auf UPRO AI Lab + KI Toolbox läuft bis zum{' '}
                   <strong>{formatDate(subscription.current_period_end)}</strong>. Danach ist der
                   Account auf den Free-Zustand zurück. Gekaufte Zusatz-Credits bleiben erhalten.
                 </p>

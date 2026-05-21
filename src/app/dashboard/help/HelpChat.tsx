@@ -461,7 +461,7 @@ function MessageBubble({ msg, userInitials }: { msg: Message; userInitials: stri
     )
   }
 
-  // assistant (KI) — styled wie Herr Tech GPT: kein Box, flie\u00dfender Text
+  // assistant (KI) — styled wie UPRO AI Lab: kein Box, flie\u00dfender Text
   return (
     <div className="flex justify-start">
       <div className="w-full py-1">

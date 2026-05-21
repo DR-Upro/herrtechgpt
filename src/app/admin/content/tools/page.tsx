@@ -21,7 +21,7 @@ export default async function AdminToolsPage() {
   return (
     <div className="p-8 max-w-6xl">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-foreground mb-2">HerrTech Tech-Stack</h1>
+        <h1 className="text-2xl font-bold text-foreground mb-2">UPRO AI Lab Tech-Stack</h1>
         <p className="text-muted max-w-2xl">
           Zentrale Liste aller Tools, die die Assistenten empfehlen dürfen. Diese Liste
           wird bei jedem Chat in den System-Prompt injiziert — Änderungen wirken sofort,

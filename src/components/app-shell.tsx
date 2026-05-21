@@ -86,7 +86,7 @@ export function AppShell({ conversations, userEmail, userName, isAdmin, realIsAd
               <line x1="3" y1="18" x2="21" y2="18" />
             </svg>
           </button>
-          <img src="/logo.png" alt="Herr Tech" className="h-5 w-auto" />
+          <img src="/logo.svg" alt="UPRO AI Lab" className="h-5 w-auto" />
         </div>
 
         {/* Desktop sidebar toggle — fixed tab at sidebar edge */}

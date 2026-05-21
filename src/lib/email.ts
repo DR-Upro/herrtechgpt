@@ -12,7 +12,7 @@ function getResend(): Resend | null {
 }
 
 function fromAddress(): string {
-  return process.env.RESEND_FROM_EMAIL ?? 'Herr Tech <onboarding@resend.dev>'
+  return process.env.RESEND_FROM_EMAIL ?? 'UPRO AI Lab <onboarding@resend.dev>'
 }
 
 /**

@@ -111,7 +111,7 @@ AKTUELLE SLIDES:
 ${JSON.stringify(currentSlides, null, 2)}
 
 AKTUELLE PRIMÄRFARBE:
-${currentPalette?.brandPrimary || '#B598E2'}
+${currentPalette?.brandPrimary || '#C9A04A'}
 
 Aufgabe: Überarbeite entsprechend dieser Anweisung:
 "${refinePrompt}"

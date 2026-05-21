@@ -1,5 +1,5 @@
 /**
- * Skool ↔ Herr Tech World Sync — Shared Logic
+ * Skool ↔ UPRO AI Lab World Sync — Shared Logic
  *
  * Wird genutzt von:
  *   - /api/webhooks/stripe    → Kauf-Ereignisse verarbeiten

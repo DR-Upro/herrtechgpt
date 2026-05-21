@@ -445,7 +445,7 @@ function ToolEditModal({
               className="w-full bg-surface-secondary border border-border rounded-lg px-3 py-2 text-sm text-foreground"
             />
             <p className="text-xs text-muted mt-1">
-              Wenn ein User nach einem dieser Tools fragt, lenkt der Assistent höflich auf das HerrTech-Tool zurück.
+              Wenn ein User nach einem dieser Tools fragt, lenkt der Assistent höflich auf das UPRO AI Lab-Tool zurück.
             </p>
           </Field>
 

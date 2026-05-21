@@ -224,7 +224,7 @@ export function PricingModal({
               Wähle deinen Plan
             </h2>
             <p className="text-sm text-muted max-w-xl mx-auto">
-              Voller Zugriff auf Herr Tech GPT + KI Toolbox. Credits für jede Aktion,
+              Voller Zugriff auf UPRO AI Lab + KI Toolbox. Credits für jede Aktion,
               jederzeit kündbar.
             </p>
           </div>

@@ -69,7 +69,7 @@ export default async function VideoCreatorPage() {
     monetization.hasActiveSubscription
 
   if (skipGate) {
-    const workerUrl = process.env.VIDEO_CREATOR_PUBLIC_URL || 'https://vc.herr.tech'
+    const workerUrl = process.env.VIDEO_CREATOR_PUBLIC_URL || 'https://vc.lab.upro-capital.com'
     return <SSORedirect workerUrl={workerUrl} />
   }
 

@@ -11,7 +11,7 @@ export const TIERS: AccessTier[] = ['basic', 'alumni', 'premium']
 
 export const FEATURE_LABELS: Record<FeatureKey, { label: string; emoji: string }> = {
   classroom:     { label: 'Classroom', emoji: '🎓' },
-  chat:          { label: 'Herr Tech GPT', emoji: '🤖' },
+  chat:          { label: 'UPRO AI Lab', emoji: '🤖' },
   toolbox:       { label: 'KI Toolbox', emoji: '🔧' },
   learning_path: { label: 'Lernpfad', emoji: '🎯' },
 }
@@ -68,7 +68,7 @@ const DEFAULT_UPSELL: Record<AccessTier, UpsellCopy> = {
     benefits: [],
     cta_label: 'Jetzt beitreten',
     cta_coming_soon: true,
-    cta_url: 'https://www.skool.com/herr-tech',
+    cta_url: 'https://www.skool.com/dein-community-slug',
   },
   alumni: {
     tier: 'alumni',
@@ -77,7 +77,7 @@ const DEFAULT_UPSELL: Record<AccessTier, UpsellCopy> = {
     benefits: [],
     cta_label: 'Mitgliedschaft reaktivieren',
     cta_coming_soon: true,
-    cta_url: 'https://www.skool.com/herr-tech',
+    cta_url: 'https://www.skool.com/dein-community-slug',
   },
   premium: {
     tier: 'premium',
@@ -86,7 +86,7 @@ const DEFAULT_UPSELL: Record<AccessTier, UpsellCopy> = {
     benefits: [],
     cta_label: 'Zur Community',
     cta_coming_soon: false,
-    cta_url: 'https://www.skool.com/herr-tech',
+    cta_url: 'https://www.skool.com/dein-community-slug',
   },
 }
 

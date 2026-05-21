@@ -36,7 +36,7 @@ export const deprecations: Deprecation[] = [
     category: 'video-generation',
     reason: 'OpenAI schaltet Sora im April 2026 ab. Wir empfehlen Veo 3 für Audio-Szenen, Seedance für Motion-Konsistenz, Kling für lange Clips und Higgsfield für Camera-Moves.',
     since: '2026-04',
-    agents: ['herr-tech', 'ai-prompt', 'content-hook', 'ai-video-studio'],
+    agents: ['upro', 'ai-prompt', 'content-hook', 'ai-video-studio'],
   },
   {
     deprecated: 'Midjourney',
@@ -44,7 +44,7 @@ export const deprecations: Deprecation[] = [
     category: 'image-generation',
     reason: 'Nano Banana 2 (Google) liefert aktuell bessere Prompt-Adherence und kann Bilder zusätzlich editieren — Midjourney ist nicht mehr Teil unseres Stacks.',
     since: '2026-04',
-    agents: ['ai-prompt', 'content-hook', 'herr-tech', 'ai-video-studio'],
+    agents: ['ai-prompt', 'content-hook', 'upro', 'ai-video-studio'],
   },
   {
     deprecated: 'n8n für Solo-Setups',
@@ -52,7 +52,7 @@ export const deprecations: Deprecation[] = [
     category: 'automation',
     reason: 'Claude Code kann die meisten 1-Personen-Automationen schneller und ohne Hosting-Overhead abbilden.',
     since: '2026-02',
-    agents: ['herr-tech', 'business-coach'],
+    agents: ['upro', 'business-coach'],
   },
   {
     deprecated: 'ChatGPT Plus (Standard)',
@@ -60,7 +60,7 @@ export const deprecations: Deprecation[] = [
     category: 'llm',
     reason: 'Claude Opus/Sonnet liefern aktuell stärkere Reasoning-Ergebnisse, insb. für Content & Prompts auf Deutsch.',
     since: '2026-03',
-    agents: ['ai-prompt', 'content-hook', 'herr-tech'],
+    agents: ['ai-prompt', 'content-hook', 'upro'],
   },
   {
     deprecated: 'Suno v3',
@@ -68,7 +68,7 @@ export const deprecations: Deprecation[] = [
     category: 'audio-music',
     reason: 'V3 wirkt heute erkennbar "AI". Neue Versionen klingen deutlich natürlicher.',
     since: '2026-01',
-    agents: ['content-hook', 'herr-tech'],
+    agents: ['content-hook', 'upro'],
   },
   {
     deprecated: 'Whisper Large-v2 (Self-Hosted)',
@@ -76,7 +76,7 @@ export const deprecations: Deprecation[] = [
     category: 'transcription',
     reason: 'Bessere Deutsch-Qualität, keine Hosting-Kosten, schneller.',
     since: '2026-02',
-    agents: ['herr-tech'],
+    agents: ['upro'],
   },
   {
     deprecated: 'Canva Free für Karussell-Posts',

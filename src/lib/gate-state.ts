@@ -6,7 +6,7 @@
  *   - subscriptionsEnabled aus app_settings
  *   - nextCreditRefreshAt aus community_members (für premium-User)
  *
- * Wird von /dashboard/ki-toolbox/* und /dashboard/herr-tech-gpt/* genutzt.
+ * Wird von /dashboard/ki-toolbox/* und /dashboard/ai-workspace/* genutzt.
  */
 
 import { createAdminClient } from '@/lib/supabase/admin'

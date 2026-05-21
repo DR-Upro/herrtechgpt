@@ -296,7 +296,7 @@ export default function PlansManager({ initialPlans }: Props) {
               <div className="border-t border-border pt-4">
                 <h3 className="text-sm font-semibold text-foreground mb-3">Stripe-Verknüpfung</h3>
                 <p className="text-xs text-muted mb-3">
-                  In Stripe 1 Product pro Plan anlegen (z.B. &quot;Herr Tech World {editing.tier}&quot;)
+                  In Stripe 1 Product pro Plan anlegen (z.B. &quot;UPRO AI Lab World {editing.tier}&quot;)
                   und pro Preisvariante einen Price (<code>price_xxx</code>). IDs hier eintragen —
                   ohne funktioniert der Checkout nicht.
                 </p>

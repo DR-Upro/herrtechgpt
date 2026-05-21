@@ -32,7 +32,7 @@ ${description}
 """
 
 REGELN:
-- primaryColor: Die markanteste/auffälligste Markenfarbe als Hex (z.B. #B598E2). Ignoriere Hintergrund-Weißtöne, Grau-Töne — wir brauchen die ECHTE Marken-Akzentfarbe.
+- primaryColor: Die markanteste/auffälligste Markenfarbe als Hex (z.B. #C9A04A). Ignoriere Hintergrund-Weißtöne, Grau-Töne — wir brauchen die ECHTE Marken-Akzentfarbe.
 - fontPairingId: Wähle das passendste Pairing aus:
     "editorial"   — Playfair Display + DM Sans (Serifen-Magazin-Look)
     "modern"      — Plus Jakarta Sans (clean, geometrisch, tech)
@@ -55,12 +55,12 @@ Gib NUR valides JSON zurück:
       ? parsed.fontPairingId
       : 'modern'
     return NextResponse.json({
-      primaryColor: parsed.primaryColor ?? '#B598E2',
+      primaryColor: parsed.primaryColor ?? '#C9A04A',
       fontPairingId: pairingId,
     })
   } catch {
     return NextResponse.json({
-      primaryColor: '#B598E2',
+      primaryColor: '#C9A04A',
       fontPairingId: 'modern',
     })
   }

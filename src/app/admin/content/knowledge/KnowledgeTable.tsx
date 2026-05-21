@@ -21,7 +21,7 @@ const AGENT_LABELS: Record<string, { label: string; color: string }> = {
   'funnel-monetization': { label: 'Funnel & Sales',    color: 'bg-blue-100 text-blue-700 dark:bg-blue-950/30 dark:text-blue-400' },
   'personal-growth':     { label: 'Personal Growth',   color: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-950/30 dark:text-yellow-400' },
   'ai-prompt':           { label: 'KI-Prompt',         color: 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300' },
-  'herr-tech':           { label: 'Herr Tech',         color: 'bg-purple-100 text-purple-700 dark:bg-purple-950/30 dark:text-purple-400' },
+  'upro':           { label: 'UPRO AI Lab',         color: 'bg-purple-100 text-purple-700 dark:bg-purple-950/30 dark:text-purple-400' },
   'business-coach':      { label: 'Business Coach',    color: 'bg-green-100 text-green-700 dark:bg-green-950/30 dark:text-green-400' },
 }
 

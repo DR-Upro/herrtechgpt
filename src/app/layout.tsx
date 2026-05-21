@@ -16,8 +16,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Herr Tech — Dein KI-Workspace",
-  description: "Deine persönlichen KI-Assistenten für Content, Business & Wachstum",
+  title: "UPRO AI Lab — KI-Workspace für Content, Business & Wachstum",
+  description: "Spezialisierte KI-Assistenten, Lernpfade und Tools für Creator und Solopreneure. Powered by UPRO Capital.",
   icons: {
     icon: [{ url: "/icon.svg", type: "image/svg+xml" }],
     apple: [{ url: "/apple-icon.svg", type: "image/svg+xml" }],

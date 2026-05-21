@@ -147,7 +147,7 @@ export default function CreditsClient({
         <div className="rounded-xl border border-amber-500/30 bg-amber-500/5 p-4 mb-6 text-sm">
           <strong className="text-foreground">Hinweis:</strong>{' '}
           <span className="text-muted">
-            Du kannst Credits auch ohne Abo kaufen, aber um Herr Tech GPT + KI Toolbox zu
+            Du kannst Credits auch ohne Abo kaufen, aber um UPRO AI Lab + KI Toolbox zu
             nutzen brauchst du mindestens den <Link href="/dashboard/pricing" className="text-primary hover:underline">Starter-Plan</Link>.
           </span>
         </div>

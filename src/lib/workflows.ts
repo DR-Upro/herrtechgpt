@@ -158,7 +158,7 @@ Seite 3 — pages/render.js (Download):
 - Preview des fertigen Videos
 - Download-Button
 
-Design: Schwarz als Hauptfarbe, Lila als Akzent (#B598E2), moderne Schrift.`,
+Design: Schwarz als Hauptfarbe, Gold als Akzent (#C9A04A), moderne Schrift.`,
       },
       {
         phase: 'Phase 6',

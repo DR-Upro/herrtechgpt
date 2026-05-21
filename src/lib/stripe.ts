@@ -37,8 +37,8 @@ export function getStripe(): Stripe {
     apiVersion: '2026-03-25.dahlia',
     typescript: true,
     appInfo: {
-      name: 'Herr Tech World',
-      url: 'https://world.herr.tech',
+      name: 'UPRO AI Lab World',
+      url: 'https://lab.upro-capital.com',
     },
   })
 

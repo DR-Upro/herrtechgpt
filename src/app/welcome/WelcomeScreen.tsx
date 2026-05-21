@@ -28,7 +28,7 @@ export function WelcomeScreen({ isCommunityMember = false }: Props) {
     <div className="min-h-screen bg-background text-foreground">
       <div className="min-h-screen flex flex-col">
         <header className="px-6 sm:px-10 py-6">
-          <img src="/logo.png" alt="Herr Tech" className="h-7 w-auto" />
+          <img src="/logo.svg" alt="UPRO AI Lab" className="h-7 w-auto" />
         </header>
 
         <main className="flex-1 flex items-center justify-center px-6 sm:px-10 py-12">
@@ -38,7 +38,7 @@ export function WelcomeScreen({ isCommunityMember = false }: Props) {
             </p>
 
             <h1 className="text-3xl sm:text-5xl lg:text-6xl font-bold leading-[1.1] tracking-tight mb-6">
-              Du bist drin. <span className="text-primary">Willkommen in der Herr Tech World.</span>
+              Du bist drin. <span className="text-primary">Willkommen in der UPRO AI Lab World.</span>
             </h1>
 
             <p className="text-base sm:text-lg text-muted leading-relaxed mb-6 max-w-2xl">
@@ -57,7 +57,7 @@ export function WelcomeScreen({ isCommunityMember = false }: Props) {
                   </div>
                   <p className="text-sm text-muted leading-relaxed">
                     Als Mitglied im KI Marketing Club ist alles für dich freigeschaltet:
-                    Herr Tech GPT, Classroom, KI Toolbox + monatliche Credits.
+                    UPRO AI Lab, Classroom, KI Toolbox + monatliche Credits.
                   </p>
                 </div>
               </div>
@@ -72,7 +72,7 @@ export function WelcomeScreen({ isCommunityMember = false }: Props) {
               <FeatureCard
                 emoji="🤖"
                 title="6 KI-Coaches"
-                text="Content, Funnel, Mindset, Prompts, Business. Antworten wie Herr Tech."
+                text="Content, Funnel, Mindset, Prompts, Business. Antworten wie UPRO AI Lab."
               />
               <FeatureCard
                 emoji="🎓"
@@ -99,7 +99,7 @@ export function WelcomeScreen({ isCommunityMember = false }: Props) {
         </main>
 
         <footer className="px-6 sm:px-10 py-8 text-center text-xs text-muted">
-          © Herr Tech · Powered by Claude
+          © UPRO AI Lab · Powered by Claude
         </footer>
       </div>
     </div>

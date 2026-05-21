@@ -54,13 +54,13 @@ export default function PricingDisabledView({ communityUrl }: Props) {
             </div>
 
             <p className="text-muted mb-6">
-              Vollzugriff auf alles: Herr Tech GPT, Classroom, Live Calls und monatliche
+              Vollzugriff auf alles: UPRO AI Lab, Classroom, Live Calls und monatliche
               Credits für die KI-Toolbox.
             </p>
 
             <ul className="space-y-2 mb-8 flex-1">
               {[
-                'Herr Tech GPT (alle 6 Agenten)',
+                'UPRO AI Lab (alle 6 Agenten)',
                 'Classroom & alle Lern-Module',
                 'Live Calls & Community',
                 'Monatliche Credits für die Toolbox',
@@ -112,7 +112,7 @@ export default function PricingDisabledView({ communityUrl }: Props) {
               </li>
               <li className="flex items-start gap-2 text-sm text-muted">
                 <span className="text-muted mt-0.5">—</span>
-                <span>Kein Zugriff auf Herr Tech GPT &amp; Classroom</span>
+                <span>Kein Zugriff auf UPRO AI Lab &amp; Classroom</span>
               </li>
             </ul>
 

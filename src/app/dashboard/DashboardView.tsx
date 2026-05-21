@@ -134,7 +134,7 @@ function LearningPathWidget() {
 
   useEffect(() => {
     try {
-      const stored = localStorage.getItem('herr_tech_path_progress')
+      const stored = localStorage.getItem('upro_ai_lab_path_progress')
       if (stored) setCompleted(parseInt(stored, 10))
     } catch {}
   }, [])
@@ -408,12 +408,12 @@ function SubscriptionUpsellCard({
           </div>
           <h3 className="text-lg font-bold text-foreground mb-1">KI-Tools freischalten</h3>
           <p className="text-sm text-muted mb-3 leading-snug">
-            Voller Zugriff auf Herr Tech GPT und die KI Toolbox. S, M oder L — du wählst die passenden Credits.
+            Voller Zugriff auf UPRO AI Lab und die KI Toolbox. S, M oder L — du wählst die passenden Credits.
           </p>
 
           <ul className="space-y-1 mb-4 flex-1">
             {[
-              'Herr Tech GPT — 6 Experten-Agenten',
+              'UPRO AI Lab — 6 Experten-Agenten',
               'KI Toolbox — Carousel, Video-Creator & mehr',
               'Monatliche Credits, die mit dir wachsen',
             ].map((b) => (
@@ -821,7 +821,7 @@ export default function DashboardView({
         <div>
           <div className="flex items-center gap-3 mb-2">
             <h1 className="text-2xl sm:text-3xl font-bold text-foreground">
-              Willkommen in der Herr Tech World
+              Willkommen in der UPRO AI Lab World
             </h1>
             <Zap size={24} className="text-primary" />
           </div>
@@ -876,10 +876,10 @@ export default function DashboardView({
         />
 
         <DashboardTile
-          href="/dashboard/herr-tech-gpt"
+          href="/dashboard/ai-workspace"
           icon={Bot}
-          iconBg="bg-gradient-to-br from-[#B598E2] to-[#9b51e0]"
-          title="Herr Tech GPT"
+          iconBg="bg-gradient-to-br from-[#C9A04A] to-[#B08A3A]"
+          title="UPRO AI Lab"
           subtitle="Dein KI-Assistent"
           description="6 spezialisierte KI-Agenten mit dem gesamten Wissen aus allen Lernvideos."
           features={['Content & Hook Agent', 'Business Coach', 'Prompt Engineer']}

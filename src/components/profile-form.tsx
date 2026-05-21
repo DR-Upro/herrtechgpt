@@ -15,7 +15,7 @@ const fields = [
     label: 'Über mich',
     hint: 'Wer bist du? Dein Hintergrund, deine Erfahrung, deine Geschichte',
     placeholder:
-      'z.B. "Online-Unternehmer seit 4 Jahren, Schwerpunkt auf KI-Tools und Automatisierung. Früher Softwareentwickler, heute Creator und Coach für die HerrTech-Community."',
+      'z.B. "Online-Unternehmer seit 4 Jahren, Schwerpunkt auf KI-Tools und Automatisierung. Früher Softwareentwickler, heute Creator und Coach für die UPRO-Capital-Community."',
     icon: '👤',
   },
   {

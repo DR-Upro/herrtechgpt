@@ -46,7 +46,7 @@ export default async function CreditsPage({
         communityUrl={settings.communityUrl}
         benefits={[
           'Monatliche Credits für die Toolbox automatisch',
-          'Voller Zugriff auf Herr Tech GPT',
+          'Voller Zugriff auf UPRO AI Lab',
           'Classroom mit allen Lern-Modulen',
           'Live Calls + Community',
         ]}

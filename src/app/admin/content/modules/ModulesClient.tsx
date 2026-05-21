@@ -224,7 +224,7 @@ function SortableModuleRow({
         <p className="text-xs text-muted mt-0.5 inline-flex items-center flex-wrap gap-1.5">
           <span>{module.videoCount} Videos</span>
           {module.draftCount > 0 && (
-            <span className="inline-flex items-center px-1.5 py-0.5 rounded bg-[#B598E2]/15 text-[#9b51e0] font-medium">
+            <span className="inline-flex items-center px-1.5 py-0.5 rounded bg-[#C9A04A]/15 text-[#B08A3A] font-medium">
               {module.draftCount} {module.draftCount === 1 ? 'Entwurf' : 'Entwürfe'}
             </span>
           )}

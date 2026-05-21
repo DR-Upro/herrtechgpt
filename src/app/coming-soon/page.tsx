@@ -1,9 +1,9 @@
 import { SignupForm } from './SignupForm'
 
 export const metadata = {
-  title: 'Herr Tech World — Bald verfügbar',
+  title: 'UPRO AI Lab World — Bald verfügbar',
   description:
-    'Eine komplette KI-Plattform. Gebaut mit Claude. Trag dich ein und sei einer der Ersten, wenn die Herr Tech World öffnet.',
+    'Eine komplette KI-Plattform. Gebaut mit Claude. Trag dich ein und sei einer der Ersten, wenn die UPRO AI Lab World öffnet.',
 }
 
 export default function ComingSoonPage() {
@@ -11,7 +11,7 @@ export default function ComingSoonPage() {
     <div className="min-h-screen bg-background text-foreground">
       <div className="min-h-screen flex flex-col">
         <header className="px-6 sm:px-10 py-6">
-          <img src="/logo.png" alt="Herr Tech" className="h-7 w-auto" />
+          <img src="/logo.svg" alt="UPRO AI Lab" className="h-7 w-auto" />
         </header>
 
         <main className="flex-1 flex items-center justify-center px-6 sm:px-10 py-12">
@@ -27,7 +27,7 @@ export default function ComingSoonPage() {
             <p className="text-base sm:text-lg text-muted leading-relaxed mb-4 max-w-2xl">
               Kein Developer-Team. Kein 6-Monats-Projekt. Kein SaaS-Budget. Nur klare Ideen,
               die richtigen Prompts und Claude als Baumeister — und am Ende stand da
-              die <strong className="text-foreground">Herr Tech World</strong>.
+              die <strong className="text-foreground">UPRO AI Lab World</strong>.
             </p>
             <p className="text-base sm:text-lg text-muted leading-relaxed mb-10 max-w-2xl">
               Eine komplette KI-Plattform: Toolbox, 6 spezialisierte Coaches, Classroom.
@@ -52,14 +52,14 @@ export default function ComingSoonPage() {
               <FeatureCard
                 emoji="🤖"
                 title="6 KI-Coaches"
-                text="Trainiert auf Herr Techs Inhalten. Für Content, Funnel, Mindset & mehr."
+                text="Trainiert auf UPRO AI Labs Inhalten. Für Content, Funnel, Mindset & mehr."
               />
             </div>
           </div>
         </main>
 
         <footer className="px-6 sm:px-10 py-8 text-center text-xs text-muted">
-          © Herr Tech · Powered by Claude
+          © UPRO AI Lab · Powered by Claude
         </footer>
       </div>
     </div>

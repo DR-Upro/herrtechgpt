@@ -94,7 +94,7 @@ export function ChatInterface({
       } else {
         openPaywall()
       }
-      router.replace(`/dashboard/herr-tech-gpt/${conversationId}`)
+      router.replace(`/dashboard/ai-workspace/${conversationId}`)
     }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 

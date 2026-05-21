@@ -13,7 +13,7 @@ export function DashboardNav({ isPremium }: { isPremium: boolean }) {
         🎬 Lernvideos
       </NavLink>
       {isPremium ? (
-        <NavLink href="/dashboard/herr-tech-gpt" active={false} highlight>
+        <NavLink href="/dashboard/ai-workspace" active={false} highlight>
           🤖 KI-Workspace
         </NavLink>
       ) : (

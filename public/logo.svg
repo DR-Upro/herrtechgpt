@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 80" width="480" height="80">
+  <defs>
+    <linearGradient id="goldAccent" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#C9A04A"/>
+      <stop offset="100%" stop-color="#E8943A"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Wordmark: "Upro Capital" Editorial-Stil + "AI Lab" Subtitle -->
+  <text x="0" y="44"
+        font-family="Georgia, 'Times New Roman', serif"
+        font-size="42"
+        font-weight="300"
+        letter-spacing="-1.2"
+        fill="currentColor">Upro <tspan font-style="italic">Capital</tspan></text>
+
+  <!-- Bullet-Separator -->
+  <circle cx="275" cy="36" r="2.5" fill="url(#goldAccent)"/>
+
+  <!-- AI Lab Tag -->
+  <text x="290" y="42"
+        font-family="Georgia, 'Times New Roman', serif"
+        font-size="22"
+        font-weight="400"
+        letter-spacing="0.5"
+        fill="currentColor"
+        opacity="0.85">AI Lab</text>
+
+  <!-- Untertitel-Linie -->
+  <line x1="0" y1="62" x2="60" y2="62" stroke="url(#goldAccent)" stroke-width="1.5"/>
+  <text x="68" y="68"
+        font-family="Georgia, serif"
+        font-size="11"
+        font-weight="400"
+        letter-spacing="3"
+        fill="currentColor"
+        opacity="0.5">THE AI ADVANTAGE</text>
+</svg>

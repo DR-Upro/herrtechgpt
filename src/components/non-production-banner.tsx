@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { AlertTriangle } from 'lucide-react'
 
-const PRODUCTION_HOST = 'world.herr.tech'
+const PRODUCTION_HOST = 'lab.upro-capital.com'
 
 export function NonProductionBanner() {
   const [host, setHost] = useState<string | null>(null)
@@ -15,7 +15,7 @@ export function NonProductionBanner() {
   if (!host || host === PRODUCTION_HOST) return null
 
   const label =
-    host === 'staging.herr.tech' ? 'STAGING'
+    host === 'staging.lab.upro-capital.com' ? 'STAGING'
     : host === 'localhost' || host === '127.0.0.1' ? 'LOCAL DEV'
     : 'PREVIEW'
 
@@ -25,7 +25,7 @@ export function NonProductionBanner() {
       <span>
         Du bist auf <strong>{label}</strong> ({host}). Änderungen wirken auf die
         <strong> Live-Datenbank</strong>. Einladungs-Links zeigen immer auf{' '}
-        <strong>world.herr.tech</strong>.
+        <strong>lab.upro-capital.com</strong>.
       </span>
     </div>
   )

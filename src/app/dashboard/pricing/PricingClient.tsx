@@ -179,7 +179,7 @@ export default function PricingClient({
           Wähle deinen Plan
         </h1>
         <p className="text-muted max-w-2xl mx-auto">
-          Voller Zugriff auf Herr Tech GPT + KI Toolbox. Credits für jede Aktion,
+          Voller Zugriff auf UPRO AI Lab + KI Toolbox. Credits für jede Aktion,
           monatlich oder jährlich — jederzeit kündbar.
         </p>
       </div>
@@ -459,7 +459,7 @@ export default function PricingClient({
           </p>
           <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-5">
             {[
-              'Live-Calls mit Herr Tech',
+              'Live-Calls mit UPRO AI Lab',
               'Alle Lernmaterialien freigeschaltet',
               'Community-Zugang (Fragen & Feedback)',
               'Frühzeitiger Zugriff auf neue Features',

@@ -44,7 +44,7 @@ export default async function ConversationPage({
     .single()
 
   if (!conversation) {
-    redirect('/dashboard/herr-tech-gpt')
+    redirect('/dashboard/ai-workspace')
   }
 
   const agentId = conversation.agent_id ?? 'general'
