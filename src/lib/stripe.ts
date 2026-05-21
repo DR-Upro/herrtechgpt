@@ -34,7 +34,7 @@ export function getStripe(): Stripe {
   _stripe = new Stripe(secretKey, {
     // API-Version pinnen (matcht die aktuell verwendete SDK-Version).
     // Beim Upgraden: zuerst im Dashboard prüfen, was sich geändert hat.
-    apiVersion: '2026-03-25.dahlia',
+    apiVersion: '2026-04-22.dahlia',
     typescript: true,
     appInfo: {
       name: 'UPRO AI Lab World',
