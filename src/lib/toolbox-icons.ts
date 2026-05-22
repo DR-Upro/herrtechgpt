@@ -14,6 +14,7 @@ import {
   Brush,
   Camera,
   MessageSquare,
+  Radar,
   type LucideIcon,
 } from 'lucide-react'
 
@@ -33,6 +34,7 @@ export const TOOLBOX_ICONS: Record<string, LucideIcon> = {
   Brush,
   Camera,
   MessageSquare,
+  Radar,
 }
 
 export const TOOLBOX_ICON_NAMES = Object.keys(TOOLBOX_ICONS)
