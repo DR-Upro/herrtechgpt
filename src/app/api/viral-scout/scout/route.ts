@@ -28,6 +28,10 @@ import {
   getCachedNiche,
   putNiche,
 } from "@/lib/viral-scout/cache/db";
+import { createClient } from "@/lib/supabase/server";
+import { chargeCredits, hasActionAccess, refundCredits } from "@/lib/monetization";
+
+const FEATURE = "viral_scout";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 300;
@@ -91,8 +95,55 @@ export async function POST(request: NextRequest) {
     );
   }
 
+  // Auth + Subscription-Gate + Credit-Charge.
+  // Mock-Mode (kein Apify-Token) ueberspringt den Charge, weil kein API-Call
+  // ausgefuehrt wird — der User sieht nur Dummy-Daten.
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) {
+    return Response.json({ error: "Nicht angemeldet." }, { status: 401 });
+  }
+
   const env = readEnv();
   const useMock = !hasLiveKeys(env);
+
+  let chargedAmount = 0;
+  if (!useMock) {
+    if (!(await hasActionAccess(supabase, user.id))) {
+      return Response.json(
+        { error: "Kein aktives Abo. Bitte Plan abschliessen." },
+        { status: 402 },
+      );
+    }
+    const chargeResult = await chargeCredits({
+      userId: user.id,
+      feature: FEATURE,
+      units: 1,
+      note: `Viral Scout: ${parsed.platform}/${parsed.handle}`,
+    });
+    if (!chargeResult.ok) {
+      return Response.json(
+        {
+          error: "Nicht genug Credits",
+          needed: chargeResult.needed,
+          available: chargeResult.available,
+        },
+        { status: 402 },
+      );
+    }
+    chargedAmount = chargeResult.charged;
+  }
+
+  const refundOnFailure = async (reason: string) => {
+    if (chargedAmount > 0) {
+      await refundCredits({
+        userId: user.id,
+        amount: chargedAmount,
+        feature: FEATURE,
+        note: `Refund wegen: ${reason}`,
+      });
+    }
+  };
 
   const stream = new ReadableStream<Uint8Array>({
     async start(controller) {
@@ -134,6 +185,7 @@ export async function POST(request: NextRequest) {
       } catch (err) {
         const message = err instanceof Error ? err.message : "Unknown error";
         console.error("[scout] pipeline failed:", err);
+        await refundOnFailure(message);
         emit({ type: "error", message });
       } finally {
         clearInterval(heartbeat);
