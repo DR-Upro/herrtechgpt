@@ -12,6 +12,7 @@ import type { FeatureKey, FeatureState } from '@/lib/permissions'
 
 interface AppShellProps {
   conversations: Conversation[]
+  archivedConversations?: Conversation[]
   userEmail?: string
   userName?: string
   isAdmin?: boolean
@@ -26,7 +27,7 @@ interface AppShellProps {
   children: React.ReactNode
 }
 
-export function AppShell({ conversations, userEmail, userName, isAdmin, realIsAdmin, accessTier, viewAs, states, newTicketCount, helpUnreadCount, subscriptionsEnabled, children }: AppShellProps) {
+export function AppShell({ conversations, archivedConversations, userEmail, userName, isAdmin, realIsAdmin, accessTier, viewAs, states, newTicketCount, helpUnreadCount, subscriptionsEnabled, children }: AppShellProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false)       // mobile overlay
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false) // desktop collapse
   const pathname = usePathname()
@@ -57,6 +58,7 @@ export function AppShell({ conversations, userEmail, userName, isAdmin, realIsAd
       >
         <Sidebar
           conversations={conversations}
+          archivedConversations={archivedConversations}
           userEmail={userEmail}
           userName={userName}
           isAdmin={isAdmin}

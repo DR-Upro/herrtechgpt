@@ -23,14 +23,22 @@ export default async function DashboardLayout({
 
   const supabase = await createClient()
 
-  const [profile, { data: conversations }, cookieStore, matrix, { count: helpUnreadCount }, settings] = await Promise.all([
+  const [profile, { data: conversations }, { data: archivedConversations }, cookieStore, matrix, { count: helpUnreadCount }, settings] = await Promise.all([
     getProfileCached(),
     supabase
       .from('conversations')
-      .select('id, user_id, agent_id, title, created_at, updated_at, user_has_unread')
+      .select('id, user_id, agent_id, title, created_at, updated_at, user_has_unread, archived')
       .eq('user_id', user.id)
+      .eq('archived', false)
       .order('updated_at', { ascending: false })
-      .limit(15),
+      .limit(50),
+    supabase
+      .from('conversations')
+      .select('id, user_id, agent_id, title, created_at, updated_at, user_has_unread, archived')
+      .eq('user_id', user.id)
+      .eq('archived', true)
+      .order('updated_at', { ascending: false })
+      .limit(50),
     cookies(),
     getPermissionMatrix(supabase),
     supabase
@@ -67,6 +75,7 @@ export default async function DashboardLayout({
   return (
     <AppShell
       conversations={conversations ?? []}
+      archivedConversations={archivedConversations ?? []}
       userEmail={userEmail}
       userName={userName}
       isAdmin={access.isAdmin}

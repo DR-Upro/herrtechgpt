@@ -31,6 +31,7 @@ export interface Conversation {
   created_at: string
   updated_at: string
   user_has_unread?: boolean
+  archived?: boolean
 }
 
 export interface Message {

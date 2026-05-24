@@ -5,7 +5,9 @@ import { getAgent } from '@/lib/agents'
 import { deprecationPromptBlock } from '@/lib/deprecations'
 import { buildToolsBlock } from '@/lib/prompts/tools-block'
 
-export const maxDuration = 60
+// 300s erlaubt lange Antworten (Blueprints, Skripte) ohne Vercel-Timeout.
+// Vercel-Hobby-Plan-Cap ist 300s, Pro wäre 800s.
+export const maxDuration = 300
 
 export async function POST(req: Request) {
   const supabase = await createClient()
@@ -226,6 +228,9 @@ export async function POST(req: Request) {
     model: anthropic('claude-sonnet-4-5-20250929'),
     system: fullSystemPrompt,
     messages,
+    // 16k Output-Tokens: deckt komplette Blueprints, mehrteilige Skripte
+    // und lange Strukturen ab, ohne dass der User "weiter" sagen muss.
+    maxOutputTokens: 16000,
     onFinish: async ({ text }) => {
       // User wurde bereits oben gespeichert — hier nur noch Assistant.
       await supabase.from('messages').insert({

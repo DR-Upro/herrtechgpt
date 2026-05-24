@@ -53,6 +53,7 @@ type SidebarMode = 'main' | 'chat' | 'admin' | 'classroom' | 'toolbox' | 'help'
 
 interface SidebarProps {
   conversations: Conversation[]
+  archivedConversations?: Conversation[]
   userEmail?: string
   userName?: string
   isAdmin?: boolean
@@ -113,6 +114,20 @@ function ConversationItem({ conv, isActive }: { conv: Conversation; isActive: bo
     router.refresh()
   }
 
+  const handleToggleArchive = async () => {
+    const supabase = createClient()
+    await supabase
+      .from('conversations')
+      .update({ archived: !conv.archived })
+      .eq('id', conv.id)
+    setMenuOpen(false)
+    // Wenn der gerade aktive Chat archiviert wird, raus auf die Landing.
+    if (isActive && !conv.archived) {
+      router.push('/dashboard/ai-workspace')
+    }
+    router.refresh()
+  }
+
   if (isRenaming) {
     return (
       <div className="flex items-center gap-1 px-3 py-2">
@@ -154,12 +169,18 @@ function ConversationItem({ conv, isActive }: { conv: Conversation; isActive: bo
         </button>
 
         {menuOpen && (
-          <div className="absolute right-0 top-full mt-1 z-50 bg-surface border border-border rounded-[var(--radius-lg)] shadow-[var(--shadow-dropdown)] py-1 min-w-[140px]">
+          <div className="absolute right-0 top-full mt-1 z-50 bg-surface border border-border rounded-[var(--radius-lg)] shadow-[var(--shadow-dropdown)] py-1 min-w-[160px]">
             <button
               onClick={() => { setIsRenaming(true); setMenuOpen(false) }}
               className="w-full text-left px-3 py-2 text-sm text-foreground hover:bg-surface-hover transition-colors"
             >
               Umbenennen
+            </button>
+            <button
+              onClick={handleToggleArchive}
+              className="w-full text-left px-3 py-2 text-sm text-foreground hover:bg-surface-hover transition-colors"
+            >
+              {conv.archived ? 'Wiederherstellen' : 'Archivieren'}
             </button>
             <button
               onClick={handleDelete}
@@ -581,12 +602,14 @@ function ViewAsSwitcher({ current }: { current: ViewAsMode }) {
 
 function ChatSidebar({
   conversations,
+  archivedConversations = [],
   pathname,
   onBack,
   isAdmin,
   onDrillDown,
 }: {
   conversations: Conversation[]
+  archivedConversations?: Conversation[]
   pathname: string
   onBack: () => void
   isAdmin?: boolean
@@ -594,6 +617,7 @@ function ChatSidebar({
 }) {
   const router = useRouter()
   const [startingAgent, setStartingAgent] = useState<string | null>(null)
+  const [archiveOpen, setArchiveOpen] = useState(false)
 
   const startAgentChat = async (agentId: string) => {
     if (startingAgent) return
@@ -682,6 +706,35 @@ function ChatSidebar({
               />
             ))}
           </div>
+        </div>
+      )}
+
+      {/* Archiv — kollabiert, expandiert nur on click */}
+      {archivedConversations.length > 0 && (
+        <div className="px-3 py-2 border-t border-border">
+          <button
+            onClick={() => setArchiveOpen(!archiveOpen)}
+            className="w-full flex items-center justify-between px-2 py-1.5 text-xs uppercase tracking-wider text-muted hover:text-foreground transition-colors rounded-[var(--radius-md)] hover:bg-surface-hover"
+          >
+            <span className="inline-flex items-center gap-1.5">
+              <ChevronDown
+                size={12}
+                className={`transition-transform ${archiveOpen ? '' : '-rotate-90'}`}
+              />
+              Archiv ({archivedConversations.length})
+            </span>
+          </button>
+          {archiveOpen && (
+            <div className="space-y-0.5 mt-1">
+              {archivedConversations.map((conv) => (
+                <ConversationItem
+                  key={conv.id}
+                  conv={conv}
+                  isActive={pathname.includes(conv.id)}
+                />
+              ))}
+            </div>
+          )}
         </div>
       )}
 
@@ -1380,7 +1433,7 @@ function ToolboxSidebar({
 // MAIN SIDEBAR EXPORT
 // ═══════════════════════════════════════════════════════════
 
-export function Sidebar({ conversations, userEmail, userName, isAdmin, realIsAdmin, accessTier, viewAs, states, newTicketCount, helpUnreadCount, subscriptionsEnabled = false }: SidebarProps) {
+export function Sidebar({ conversations, archivedConversations = [], userEmail, userName, isAdmin, realIsAdmin, accessTier, viewAs, states, newTicketCount, helpUnreadCount, subscriptionsEnabled = false }: SidebarProps) {
   const pathname = usePathname()
   const router = useRouter()
   const { theme, toggleTheme } = useTheme()
@@ -1476,6 +1529,7 @@ export function Sidebar({ conversations, userEmail, userName, isAdmin, realIsAdm
         >
           <ChatSidebar
             conversations={conversations}
+            archivedConversations={archivedConversations}
             pathname={pathname}
             onBack={handleBack}
             isAdmin={realIsAdmin}
