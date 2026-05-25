@@ -54,11 +54,25 @@ export default function AiWorkspacePage() {
     startChat(agentId)
   }, [searchParams, startChat])
 
-  // Smart routing: determine best agent from user input
-  const handleSmartStart = () => {
-    if (!inputText.trim()) return
-    // Default to upro agent, could be enhanced with AI routing
-    startChat('upro', inputText)
+  // Smart routing: Claude Haiku klassifiziert den User-Input und gibt
+  // den passenden Agent zurueck. Bei jedem Fehler Fallback auf 'upro'.
+  const [routing, setRouting] = useState(false)
+  const handleSmartStart = async () => {
+    const text = inputText.trim()
+    if (!text || routing) return
+    setRouting(true)
+    try {
+      const res = await fetch('/api/agent-route', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text }),
+      })
+      const { agentId } = (await res.json().catch(() => ({}))) as { agentId?: string }
+      const target = agentId && agents.find((a) => a.id === agentId) ? agentId : 'upro'
+      await startChat(target, text)
+    } finally {
+      setRouting(false)
+    }
   }
 
   return (
@@ -85,10 +99,10 @@ export default function AiWorkspacePage() {
           />
           <button
             onClick={handleSmartStart}
-            disabled={!inputText.trim() || !!loading}
+            disabled={!inputText.trim() || !!loading || routing}
             className="btn-primary px-3 py-2 disabled:opacity-40"
           >
-            {loading === 'upro' ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
+            {routing || loading ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
           </button>
         </div>
       </div>
