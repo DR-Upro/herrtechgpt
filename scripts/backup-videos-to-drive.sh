@@ -20,6 +20,13 @@ docker exec "$DB_CONTAINER" psql -U postgres -d postgres -tA -F'|' -c "SELECT v.
 TOTAL=$(wc -l < /tmp/upro-video-manifest.txt | tr -d ' ')
 COUNT=0
 
+# Drive-Listing EINMAL vor der Loop holen (statt 81x rclone-Call).
+# Spart ~80 API-Calls und damit Rate-Limit-Stress.
+echo "Lade Drive-Listing (einmalig)..." | tee -a "$LOG_FILE"
+DRIVE_CACHE=$(mktemp)
+rclone lsf -R --files-only "$DRIVE_REMOTE/" > "$DRIVE_CACHE" 2>>"$LOG_FILE" || echo "" > "$DRIVE_CACHE"
+echo "  → $(wc -l < "$DRIVE_CACHE" | tr -d ' ') Files bereits in Drive" | tee -a "$LOG_FILE"
+
 while IFS='|' read -r wistia_id module chapter sort title; do
   COUNT=$((COUNT + 1))
   [ -z "$wistia_id" ] && continue
@@ -38,8 +45,13 @@ while IFS='|' read -r wistia_id module chapter sort title; do
 
   echo "[$COUNT/$TOTAL] $module/$chapter/$fname (wistia: $wistia_id)" | tee -a "$LOG_FILE"
 
-  # Skip if already in Drive
-  if rclone lsf "$drive_path/" 2>/dev/null | grep -qF "${fname}.mp4"; then
+  # Skip if already in Drive — gegen lokalen Cache statt rclone-Call (rate-limit-friendly)
+  if [ -n "$chapter" ]; then
+    cache_key="${module}/${chapter}/${fname}.mp4"
+  else
+    cache_key="${module}/${fname}.mp4"
+  fi
+  if grep -qF "$cache_key" "$DRIVE_CACHE"; then
     echo "  → already in Drive, skip" | tee -a "$LOG_FILE"
     continue
   fi

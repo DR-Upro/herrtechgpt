@@ -1,340 +1,266 @@
 @AGENTS.md
 
-> **Arbeitest du am KI Video Creator (Toolbox)?**
-> Lies zuerst [docs/VIDEO_CREATOR.md](docs/VIDEO_CREATOR.md) — komplettes
-> Handover mit Architektur (Hetzner-Worker + Vercel-Proxy), allen URLs,
-> offenen Punkten, Debug-Wegen und Gotchas.
-
-# Projekt-Steckbrief: Herr Tech GPT
+# Projekt-Steckbrief: UPRO AI Lab
 
 ## Was ist das?
-KI-Lern- und Coaching-Plattform für deutschsprachige Unternehmer. Powered by "Herr Tech" (Florian Hübner).
+Doc's privater KI-Workspace und sein Multi-Brand-Backoffice. Geforkt aus
+`Startup1993/herrtechgpt` (Florians "Herr Tech GPT"), rebrandet auf UPRO
+Capital und seit dem 21. Mai 2026 live unter `https://lab.upro-capital.com`.
+Sechs spezialisierte KI-Assistenten (Hooks, Funnels, Automation, Prompting,
+Video, Coaching), ein Classroom mit Wistia-Videos plus AssemblyAI-Transkription,
+eine Toolbox mit Karussell-Generator, KI-Video-Editor und KI-Video-Creator
+sowie ein Admin-Bereich mit User-Management, Monetarisierungs-Switch und
+editierbaren E-Mail-Templates.
+
+Aktueller Use-Case ist primär persönlich: Doc nutzt das Lab zur Produktion
+von Inhalten und Workflows für seine Brands (EVE, Bella, Donna, Atlas Web
+Studio). Multi-User-Öffnung mit Coming-Soon-Wait-List ist aktiv, eine echte
+Self-Service-Registrierung müsste vor einem Public-Launch noch ausgebaut
+werden.
 
 ## Tech-Stack
-- **Framework:** Next.js 16.2.1 (App Router) + React 19 + TypeScript
-- **Styling:** Tailwind CSS v4 (`@theme inline` in globals.css)
-- **DB + Auth:** Supabase (PostgreSQL + Auth + RLS)
-- **AI:** Claude API via `@ai-sdk/anthropic` + `@ai-sdk/react`
-- **Videos:** Wistia API + AssemblyAI Transkription
-- **Node:** v22 erforderlich (`nvm use 22` bzw. `$HOME/.nvm/versions/node/v22.22.2/bin`)
 
-## Routen-Struktur (NEU — Dashboard-First)
+| Schicht | Technologie |
+|---|---|
+| Framework | Next.js 16.2.1 (App Router, Turbopack) + React 19 + TypeScript strict |
+| Styling | Tailwind CSS v4 mit `@theme inline` in `src/app/globals.css` |
+| DB & Auth | Supabase Cloud — Projekt-Ref `mrhqsgccoujtbtqgvder`, Region eu-west-1 |
+| AI | Claude via `@ai-sdk/anthropic` + `@ai-sdk/react`, OpenAI für Whisper, Anthropic Sonnet 4.5 für Klassifikation |
+| Videos | Wistia (Doc's eigener Account "UPro AI") + AssemblyAI universal-2 für deutsche Transkription |
+| E-Mail | Resend mit verifizierter Domain `upro-capital.com`, Supabase Custom SMTP auf Resend gemappt |
+| Payments | Stripe — aktuell Test-Mode-Dummy-Keys, Live-Switch steht noch aus |
+| Hosting | Vercel (Project `upro-ai-lab` im Team `drichter0177-6265`) |
+| Node | v22.18.0 (Vercel-Build läuft mit pnpm@10.x) |
+
+## URLs
+
+| Rolle | URL |
+|---|---|
+| Live (Custom Domain) | `https://lab.upro-capital.com` |
+| Vercel-Fallback | `https://upro-ai-lab.vercel.app` |
+| Supabase-Studio | `https://supabase.com/dashboard/project/mrhqsgccoujtbtqgvder` |
+| Wistia-Dashboard | `https://drichter0177.wistia.com` |
+| GitHub-Repo | `https://github.com/DR-Upro/herrtechgpt` (geforkter Branch `main`) |
+
+Vercel deployt automatisch jeden Push auf `main` direkt nach Production —
+ein Staging-Branch existiert aktuell nicht. Plan-Workflow heißt also:
+lokal entwickeln, committen, pushen, Vercel deployt live.
+
+## Routen-Struktur
+
 ```
-/dashboard                          → Startseite (3 Kacheln + Lernpfad)
+/                                   → Coming-Soon-Landing (Email-Capture für Wartelisten)
+/login                              → Magic-Link-Login via Supabase Auth
+/welcome                            → First-Login-Onboarding-Quiz
+/auth/callback                      → Magic-Link-Token-Verify
+/dashboard                          → User-Startseite
 /dashboard/classroom                → Video-Bibliothek (Wistia)
-/dashboard/herr-tech-gpt            → Chat-Landing (6 Agenten als Karten)
-/dashboard/herr-tech-gpt/[convId]   → Chat-Konversation
-/dashboard/ki-toolbox               → Tool-Übersicht (Carousel, Video-Editor, Video-Creator)
+/dashboard/ai-workspace             → Chat-Landing mit 6 Agenten-Karten
+/dashboard/ai-workspace/[convId]    → Chat-Konversation
+/dashboard/ki-toolbox               → Tool-Übersicht
 /dashboard/ki-toolbox/carousel      → Instagram-Karussell-Generator
-/dashboard/ki-toolbox/video-editor  → KI Video Editor
-/dashboard/ki-toolbox/video-creator → KI Video Creator
+/dashboard/ki-toolbox/video-editor  → KI Video Editor (Transkript → Schnittvorschläge)
+/dashboard/ki-toolbox/video-creator → SSO-Redirect zu vc.lab.upro-capital.com (Worker fehlt aktuell)
 /dashboard/help                     → Hilfe-Chat + Tickets
 /dashboard/account                  → Profil, Einstellungen, Dark Mode
 /dashboard/path                     → Lernpfad-Anzeige
-/dashboard/onboarding               → Onboarding-Quiz
 
 /admin                              → Admin Dashboard (KPIs)
 /admin/users                        → Nutzerverwaltung
+/admin/newsletter                   → Coming-Soon-Signups
 /admin/groups                       → Gruppen & Rechte
 /admin/content/agents               → Assistenten verwalten
 /admin/content/knowledge            → Wissensbasis verwalten
 /admin/content/videos               → Video-Sync-Status
-/admin/monetization/settings        → Modus & Defaults (Master-Switch + Fallback-Werte)
-/admin/monetization/plans           → Abo-Pläne S/M/L (nur relevant wenn Subs aktiv)
-/admin/monetization/credits         → Credit-Kosten + Top-up-Pakete
+/admin/monetization/settings        → Master-Switch + Defaults
 /admin/tickets                      → Support-Tickets
 /admin/emails                       → E-Mail-Templates editieren
-/admin/emails/[key]                 → Template-Editor + Live-Preview
 ```
 
-## DB-Tabellen (Supabase)
-- `profiles` — User-Profil (role, access_tier, learning_path, background, market, etc.)
-- `conversations` — Chat-Konversationen (user_id, agent_id, title)
-- `messages` — Chat-Nachrichten (conversation_id, role, content)
-- `saved_content` — Gespeicherte KI-Antworten
-- `knowledge_base` — Video-Transkript-Chunks (FTS deutsch, agent-Zuordnung)
-- `pending_transcripts` — AssemblyAI Transkriptions-Queue
-- `sync_log` — Wistia-Sync-Protokoll
-- `agent_configs` — Agent-Konfigurationen (CRUD via Admin)
-- `email_templates` — Editierbare Texte aller System-Mails (siehe E-Mail-System)
-- `app_settings` — Globale Plattform-Settings (Master-Switches, Defaults). Editierbar via `/admin/monetization/settings`. Siehe Abschnitt „Monetarisierungs-Modi".
-- `community_members` — Skool-Mitglieder-Tracking (skool_status, last_credit_grant_at). Verknüpft via `profile_id` mit `profiles`.
+Wichtig: die Route heißt jetzt `/dashboard/ai-workspace`, nicht mehr
+`/dashboard/herr-tech-gpt`. Bei der Rebrand wurden alle Verlinkungen und
+der Verzeichnis-Name umgestellt. Wenn du im Code irgendwo noch ein
+`herr-tech-gpt` findest, ist das ein vergessener Rest und sollte gefixt
+werden.
 
-## 6 KI-Agenten (`src/lib/agents.ts`)
-herr-tech (Standard), content-hook, funnel-monetization, personal-growth, ai-prompt, business-coach
+## Sechs KI-Agenten
 
-## Design
-- **Primärfarbe:** Herr Tech Lila `#B598E2` (Hover: `#9b51e0`)
-- **Light:** Background `#F5F0EB`, Surface `#FFFFFF`
-- **Dark:** Background `#0F0F13`, Surface `#1A1A23`
-- **Logo:** `/public/logo.png` — NIEMALS verzerren (`object-contain`, feste Höhe)
-- **Font:** Geist Sans
-- **Responsive-First:** Mobile → Tablet → Desktop
+Definiert in `src/lib/agents.ts`. Jeder Agent hat einen eigenen System-Prompt,
+ein eigenes Emoji, eine eigene Mode (`free-chat` oder `guided`) und ein
+optionales `relevant_agents`-Array auf Knowledge-Chunks. Die Agent-Themen
+sind bewusst KI-Ausbildung-fokussiert (passt zu Doc's KI-Designer-Rolle),
+nicht Trading.
 
-## Sidebar-Konzept: Drill-Down (3 Modi)
-1. **Haupt-Sidebar:** Dashboard, Classroom, Herr Tech GPT, KI Toolbox, Hilfe, (Admin)
-2. **Chat-Sidebar:** ← Zurück, Agenten-Liste, Letzte Chats, Neuer Chat
-3. **Admin-Sidebar:** ← Zurück, Dashboard, Nutzer, Gruppen, Inhalte, Tickets
+| ID | Name | Thema |
+|---|---|---|
+| `content-hook` | Reach Machine | Hooks, virale Skripte, Reels/TikTok/Shorts |
+| `funnel-monetization` | Sales Engine | Funnels, DM-Automation, Monetarisierung |
+| `upro` | Automation Lab | Claude + n8n, Workflows, API-Chains (Default-Agent) |
+| `ai-prompt` | AI Power User | Prompting, Claude Skills, KI-Workflows |
+| `ai-video-studio` | AI Video Studio | Veo 3, Seedance, Kling, Higgsfield, HeyGen |
+| `business-coach` | Scale Coach | Business-Strategie, Positionierung, 90-Tage-Plan |
 
-## Zugriffstiers (NEU seit April 2026 — Community-only Modell)
-Drei Tiers in `profiles.access_tier`: `basic` | `alumni` | `premium`.
+Plus ein versteckter `help`-Agent für Plattform-Support, erreichbar über
+`/dashboard/help`.
 
-| Tier | Bedeutung | Toolbox | Herr Tech GPT | Classroom | Live Calls | Credits |
-|---|---|---|---|---|---|---|
-| **basic** | Starter (kleines Paket gekauft, keine Community) | ✅ | ❌ | ❌ | ❌ | Test-Credits + Pack-Käufe |
-| **alumni** | Ehemaliges Community-Mitglied | ✅ | ❌ | ❌ | ❌ | Restliche Credits + Pack-Käufe (kein Auto-Fillup) |
-| **premium** | Aktives Community-Mitglied (Skool) | ✅ | ✅ | ✅ | ✅ | Monatliche Auto-Fillup-Credits |
-| **admin** (`role`) | Admin | ✅ | ✅ | ✅ | ✅ | Bypass |
+## DB-Schema (Supabase)
 
-Wichtige Regeln:
-- **Credits zählen NUR für die Toolbox** (Carousel, Video-Editor, Video-Creator). Herr Tech GPT braucht keine Credits.
-- **Herr Tech GPT bekommt man NUR über die Community** (Skool-Mitgliedschaft → tier=premium).
-- Beim Community-Austritt: tier=alumni, Auto-Fillup stoppt SOFORT (kein Periodenende), restliche Credits bleiben verbrauchbar.
+Die wichtigsten Tabellen aus 47 Migrations in `supabase/migrations/`:
 
-# Monetarisierungs-Modi (Master-Switch)
+- `profiles` — User-Profil (role, access_tier, learning_path, background, market, target_audience, offer)
+- `conversations` + `messages` — Chat-Historie pro User pro Agent
+- `saved_content` — gespeicherte KI-Antworten
+- `knowledge_base` — Wissens-Chunks für RAG. Schema: `chunk_text`, `chunk_index`, `video_id`, `video_name`, `relevant_agents` (text[]), `source`. Postgres-FTS auf deutsche Sprachstemmung indiziert.
+- `pending_transcripts` — AssemblyAI-Queue mit Status (queued, processing, completed, error)
+- `agent_configs` — DB-Override für die Agenten-Definitionen, leer = Code-Defaults
+- `email_templates` — Override-Texte pro Mail-Template (Subject + JSONB Felder)
+- `app_settings` — globale Plattform-Settings (Master-Switches, Community-URL etc.)
+- `newsletter_signups` — Coming-Soon-Email-Capture
+- `community_members` — Skool-Mitglieder-Tracking (aktuell ungenutzt, Skool-Sync ist aus)
+- `feature_permissions` + `tier_upsell_copy` — Permission-Matrix pro Tier
+- `plans` + `credit_packs` + `feature_credit_costs` — Monetarisierungs-Konfiguration
 
-Die Plattform hat zwei Modi, gesteuert durch `app_settings.subscriptions_enabled`:
+Wichtiger Bugfix in Migration 044: die zwei ursprünglichen Admin-Policies
+auf der `profiles`-Tabelle ("Admins can view all profiles" und "Admins can
+update all profiles") wurden gedroppt, weil sie unendliche Rekursion
+verursacht haben. Admin-Wide-Access auf andere Profile läuft jetzt
+ausschließlich über den `service_role`-Client (`createAdminClient()`), nicht
+über RLS-Policies.
 
-## Modus „Community-only" (`subscriptions_enabled=false`, aktueller Standard)
-- Pricing-Seite zeigt PricingDisabledView mit zwei CTAs: „Community beitreten" + „Credits kaufen"
-- `/api/checkout/subscription` liefert 403
-- Skool-Sync legt KEINE Plan-S-Subscription mehr an — setzt direkt `tier=premium` und gewährt Initial-Credits aus `app_settings.community_monthly_credits`
-- Cron `/api/cron/community-credit-grant` (täglich 04:00 UTC) erneuert monatlich Credits (Postgres `+ interval '1 month'` = Kalendermonat-Rhythmus)
-- Permission-Matrix in `lib/permissions.ts`: `chat=community, classroom=community, toolbox=open` für alle Nicht-Premium-Tiers
-- DashboardView zeigt nur MarketingClubFull-Card (kein „Plan wählen")
-- VideoCreatorPage skipt Gate, redirected immer zum Worker (Worker prüft Credits)
+## Design-System
 
-## Modus „Mit Abos" (`subscriptions_enabled=true`, Legacy / Reaktivierung)
-- Pricing-Seite zeigt Plan S/M/L
-- Skool-Sync legt Plan-S-Subscription mit `plan_source='skool_community'` an, Credits kommen via Stripe-Invoice-Webhook
-- Cron `community-credit-grant` springt mit „skipped" raus
-- Permission-Matrix: bestehende `feature_permissions`-DB-Tabelle + Code-Defaults
-- DashboardView zeigt SubscriptionUpsellCard / UpgradeHintCard wie früher
-- VideoCreatorPage zeigt Gate wenn kein Abo
+Aus Florians Lila-Tönen (`#B598E2`) wurde UPRO-Gold. Konkret in `globals.css`:
 
-## ⚠ REGEL: Wenn du Code änderst der mit Abos / Tier-Logik zu tun hat
+| Token | Light | Dark |
+|---|---|---|
+| `--ht-primary` | `#C9A04A` | `#E5B97A` |
+| `--ht-primary-hover` | `#B08A3A` | `#F0CB95` |
+| `--ht-background` | `#F5F0EB` | `#0D0D0D` |
+| `--ht-foreground` | `#050505` | `#EBE8E0` |
+| `--ht-accent-lab` (neu) | `#2EB6C9` | `#5BD4E6` |
+| `--ht-surface` | `#FFFFFF` | `#1A1A1A` |
 
-Prüfe IMMER ob deine Änderung beide Modi sauber unterstützt:
-1. Lade `getAppSettings()` aus `@/lib/app-settings` und branche auf `subscriptionsEnabled`
-2. NoSubs-Pfad nutzt `app_settings.community_monthly_credits` als Credit-Wahrheit, nicht `plans.credits_per_month`
-3. Frontend-CTAs auf „Plan wählen" → in NoSubs-Welt durch „Community beitreten" (Skool-URL `https://www.skool.com/herr-tech`) ersetzen
-4. Bei neuen API-Endpoints die Subs voraussetzen: 403 zurückgeben wenn `!subscriptionsEnabled`
+Die Token-Namen heißen weiterhin `--ht-*` damit die ganzen Tailwind-Klassen
+und CSS-Variablen-Referenzen ohne Massen-Refactoring sitzen. Nur die Werte
+sind UPRO. Logo ist eine SVG-Wordmark unter `public/logo.svg` plus
+`src/app/icon.svg` und `src/app/apple-icon.svg` für Favicon.
 
-Admin-UI für den Switch + Defaults: `/admin/monetization/settings` (Sidebar: „Modus & Defaults").
+## Zugriffstiers
 
-# E-Mail-System (WICHTIG für jeden neuen Chat)
+Drei Tiers in `profiles.access_tier` (`basic`, `alumni`, `premium`) plus
+eine separate `role`-Spalte (`user` oder `admin`). Admin überschreibt alle
+Tier-Restriktionen.
 
-Alle System-Mails werden über **Resend** versendet und sind über `/admin/emails`
-durch Florian/Jacob editierbar — Subject, Headline, Intro-Text, CTA-Label,
-P.S. usw. Die HTML-Struktur (Logo, Feature-Liste, Footer) bleibt im Code.
+| Tier | Toolbox | AI Workspace | Classroom | Credits |
+|---|---|---|---|---|
+| basic | ✅ | ❌ | ❌ | nur Test + Pack-Käufe |
+| alumni | ✅ | ❌ | ❌ | Restkontingent, kein Auto-Fillup |
+| premium | ✅ | ✅ | ✅ | Monatliches Auto-Fillup |
+| admin | ✅ | ✅ | ✅ | Bypass |
 
-## Architektur
-- **Registry:** `src/lib/email-templates/registry.ts` — Single Source of Truth
-  für alle Templates. Definiert pro Template: `key`, `label`, `group`, `trigger`
-  (Beschreibung wann/wo die Mail rausgeht), `variables`, `fields` (editierbare
-  Felder mit Reihenfolge für UI), `defaults` (Subject + Daten als Code-Fallback).
-- **DB-Tabelle:** `email_templates` (key PK, subject, data jsonb, updated_at,
-  updated_by). Override pro Feld — leere Felder fallen auf Code-Default zurück.
-- **Loader:** `src/lib/email-templates/load.ts` — `loadTemplate(key)` merged
-  DB-Override mit Defaults aus Registry.
-- **Render:** `src/lib/email-template.ts` (Hero-Layouts) und `renderEmail()`
-  (Simple-Layout für System-Notifications). Render-Funktionen nehmen
-  `content: Record<string, string>` mit allen Texten — Variablen werden über
-  `applyVariables()` mit `{varname}` → Wert ersetzt.
-- **Versand:** `src/lib/invitations.ts` (Invites) und `src/lib/email.ts`
-  (System-Notifications). Beide laden vor jedem Send das Template via
-  `loadTemplate(key)`.
-- **Admin-UI:** `/admin/emails` (Liste) + `/admin/emails/[key]` (Editor mit
-  Live-Preview-iframe). API: `/api/admin/emails` (PUT/DELETE) +
-  `/api/admin/emails/preview` (POST, rendert mit Beispieldaten).
+Credits zählen nur für die Toolbox (Carousel + Video-Creator + Video-Editor).
+Der AI Workspace ist credit-frei für Premium und Admin.
 
-## ⚠ REGEL: Wenn du eine neue System-Mail anlegst, IMMER auch Template-Eintrag
+Doc's eigener User `dr.upro@icloud.com` (Cloud-DB User-ID
+`41e9756c-e19a-4d59-9f8b-58c897d4e04b`) ist auf `role=admin` plus
+`access_tier=premium` gesetzt.
 
-Sobald du eine neue Mail-Versand-Funktion baust (egal ob Resend oder anderer
-Provider), MUSST du in einem Schritt:
+## Monetarisierungs-Modi
 
-1. **Registry erweitern** — Neuen Eintrag in `TEMPLATES` in
-   `src/lib/email-templates/registry.ts` mit:
-   - eindeutigem `key` (snake_case)
-   - `label` (Anzeige im Admin-Menü)
-   - `group` (`'invites'` oder `'system'` — oder neue Gruppe in
-     `TEMPLATE_GROUPS`)
-   - `trigger` (volle Beschreibung wann/wo die Mail rausgeht — Florian liest
-     das in der Admin-Übersicht!)
-   - `variables` (alle `{var}`-Platzhalter mit Erklärung)
-   - `fields` (editierbare Felder, Reihenfolge bestimmt UI)
-   - `defaults.subject` + `defaults.data` (alle Default-Texte)
-   - `preview` (Beispielwerte für Live-Preview)
-2. **Render-Funktion** — Render-Funktion akzeptiert `content: Record<string, string>`
-   und nutzt `applyVariables(text, vars)` für Platzhalter-Ersetzung.
-3. **Send-Funktion** — Lädt Template via `loadTemplate(key)` vor dem Versand,
-   übergibt `tpl.data` als `content` an Render und `tpl.subject` (mit
-   `applyVariables`) als Subject.
-4. **Preview-Endpoint** — Neuen `case key:` in
-   `src/app/api/admin/emails/preview/route.ts` ergänzen, sonst funktioniert die
-   Live-Preview nicht.
+Master-Switch in `app_settings.subscriptions_enabled`. Aktuell auf `false`
+(Community-only-Modus, Default des Forks). Die zwei Modi unterscheiden
+sich darin, ob Stripe-Subscriptions aktiv verkauft werden oder ob
+Premium-Zugang nur über die Skool-Community kommt. Beide Modi sind im
+Code implementiert und können über `/admin/monetization/settings` ohne
+Code-Change umgeschaltet werden.
 
-Ohne diese Schritte taucht die Mail NICHT in `/admin/emails` auf und Florian
-kann sie nicht editieren. Das ist immer Teil der Aufgabe — nicht "danach noch".
+Wenn du Code änderst der Tier- oder Subscription-Logik betrifft, prüf
+immer beide Modi: lade `getAppSettings()` aus `@/lib/app-settings`, branche
+auf `subscriptionsEnabled`, und verifizier dass NoSubs-Pfade auch ohne
+Stripe-Webhook funktionieren.
 
-# Git-Kollaboration (Jacob & Jonas)
+## E-Mail-System
 
-## Grundregeln
-- **Niemals direkt auf `main` pushen** — immer Feature-Branch erstellen
-- Vor neuer Arbeit: `git fetch --all && git pull --rebase origin main`
-- Branch-Namensschema: `feature/kurze-beschreibung` oder `fix/kurze-beschreibung`
-- Kollaborator Jonas: jonas@startup-creator.com
+Drei Schichten. Erstens **Supabase Auth Mails** (Magic Link, Confirmation,
+Invite, Password Reset, Email Change) — werden komplett von Supabase
+gerendert, Layouts und Subjects sind in der Supabase Auth Config gesetzt,
+nicht im App-Code. Aktualisierungen laufen über die Management API mit
+einem Personal Access Token. Versand geht über Resend SMTP
+(`smtp.resend.com:465`, User `resend`, Sender
+`UPRO AI Lab <noreply@upro-capital.com>`).
 
-## Wenn der Benutzer „push", „pushen", „hochladen", „rausschicken" o.Ä. sagt:
-1. `git status` + `git log --oneline origin/main..HEAD` prüfen — was haben wir gebaut?
-2. Falls auf `main`: automatisch Feature-Branch erstellen (`git checkout -b feature/...`)
-3. Geänderte Dateien committen mit prägnanter Commit-Message
-4. Branch pushen und PR erstellen: `gh pr create --title "..." --body "..."`
-5. **Niemals** `git push origin main` direkt ausführen — immer PR-Workflow
+Zweitens **App-eigene Transactional Mails** (Invites, Ticket-Notifications,
+Newsletter-Mails). Architektur in `src/lib/email-templates/registry.ts`
+als Single Source of Truth, plus `src/lib/email-template.ts` mit
+Hero-Layouts und `renderEmail()` für Simple-Layouts. DB-Tabelle
+`email_templates` erlaubt Override pro Feld, leere Felder fallen auf
+Code-Defaults zurück. Editierbar über `/admin/emails`.
 
-## Wenn Branches zusammengeführt werden sollen (Merge):
-1. `git fetch --all` — neuesten Stand holen
-2. Konflikte analysieren bevor rebase/merge: `git diff feature-branch...origin/main`
-3. `git rebase origin/main` bevorzugen (saubere History, kein Merge-Commit-Chaos)
-4. Bei inhaltlichen Konflikten: Benutzer fragen, welche Version Priorität hat
-5. Nach Merge: Branch löschen (`git branch -d feature/...`)
+Wenn du eine neue App-Mail einbaust, MUSS gleichzeitig auch der
+Template-Eintrag in der Registry plus der Preview-Case in
+`src/app/api/admin/emails/preview/route.ts` ergänzt werden — sonst kann
+die Mail nicht über das Admin-UI editiert werden.
 
-## Push-Checkliste (immer durchgehen)
-- [ ] Bin ich auf einem Feature-Branch? (`git branch --show-current`)
-- [ ] Sind alle gewünschten Änderungen committed?
-- [ ] Gibt es neue Commits auf `main` die ich nicht habe? (`git log HEAD..origin/main --oneline`)
-- [ ] PR-Beschreibung erklärt was und warum?
+Drittens **System-Notifications** über `src/lib/email.ts` mit
+`loadTemplate(key)` als Bindeglied zur Registry und zur DB.
 
-# Deployment (Vercel)
+## Cron-Jobs (Vercel)
 
-## URL-Mapping (auswendig lernen!)
+In `vercel.json` konfiguriert, läuft täglich:
 
-| Rolle | URL | Branch | Deploy-Trigger |
-|---|---|---|---|
-| **Live** (Produktion) | `https://world.herr.tech` | `production` | NUR auf explizite Jacob-Ansage |
-| **Staging** (Testumgebung) | `https://staging.herr.tech` | `main` | Auto bei jedem Merge nach `main` |
-| **Preview** (Feature/PR) | `https://herr-tech-gpt-git-<branch>-jonas-projects-fe8f496e.vercel.app` | jeder Feature-Branch | Auto bei jedem Push auf den Branch |
-| ⚠ Nackte Vercel-URL | `https://herr-tech-gpt.vercel.app` | `production` | (Vercel-Zwang = Spiegel von Live, ignorieren) |
+- `/api/cron/wistia-sync` (06:00 UTC) — holt neue Wistia-Videos, schickt sie an AssemblyAI, polled fertige Transkripte und schreibt Chunks in `knowledge_base`. Auth über `CRON_SECRET` env-Variable. Manuell triggerbar mit `curl https://lab.upro-capital.com/api/cron/wistia-sync?secret=...`.
+- `/api/cron/skool-expiry` (03:00 UTC) — prüft abgelaufene Skool-Mitgliedschaften. Aktuell ohne Wirkung weil Skool-Sync deaktiviert ist.
+- `/api/cron/community-credit-grant` (04:00 UTC) — gewährt monatliche Premium-Credits in der Community-only-Welt.
 
-Vercel-Team-Slug: `jonas-projects` · Projekt: `herr-tech-gpt`
+## Aktueller Stand und offene Punkte
 
-## URL-Abfrage-Trigger
-Wenn Jacob fragt nach …
-- „live url", „produktiv-url", „die echte domain", „wo ists live" → **`https://world.herr.tech`**
-- „staging url", „staging link", „test-url", „wo teste ich" → **`https://staging.herr.tech`**
-- „preview url", „preview von diesem branch", „PR preview" → Format: `https://herr-tech-gpt-git-<branch-name>-jonas-projects-fe8f496e.vercel.app` (Branch-Name aus aktuellem Branch ableiten, Slashes durch `-` ersetzen)
+Was funktioniert:
+- Vercel-Deploy auf Custom Domain mit gültigem SSL
+- Supabase Cloud mit 48 Migrationen applied (47 Original plus die RLS-Recursion-Fix-Migration)
+- Magic-Link-Login über Resend Custom SMTP mit UPRO-Branding
+- Sechs KI-Agenten antworten via Anthropic API
+- Karussell-Generator und KI-Video-Editor sind funktional
+- Newsletter-Signups landen in der DB
+- Knowledge-DB-Pipeline ist code-side komplett (Wistia → AssemblyAI → Chunks → RAG)
 
-Immer als klickbaren Link antworten, nie nur als Text.
+Was noch ansteht:
+- Knowledge-DB ist in der Cloud noch leer, der erste Cron-Lauf muss laufen oder manuell getriggert werden
+- KI-Video-Creator-Slot in der Toolbox zeigt aktuell ins Leere (`vc.lab.upro-capital.com`-Worker existiert nicht) — entweder den Worker auf Hetzner oder Cloudflare Containers deployen oder den Slot durch Docs eigenen `upro-video-cloner` ersetzen
+- Stripe ist auf Test-Mode-Dummies — für echten Verkauf müssen Live-Keys rein plus Live-Webhook konfiguriert werden plus Live-Price-IDs in der `plans`-Tabelle geupdated
+- Self-Service-Registrierung von der Landing-Page ist nicht prominent verlinkt, nur `/login` direkt funktioniert
+- Onboarding-Quiz ist für Solo-Brand-Use-Case gebaut, Doc ist Multi-Brand — siehe Profile-Texte in der DB
 
-## Deploy-Flow (IMMER einhalten)
-```
-Feature-Branch → PR → main (Staging)  →  PR main → production (Live)
-```
-1. Arbeit läuft auf Feature-Branch (`feature/...` oder `fix/...`)
-2. PR gegen `main` → nach Merge automatisch auf Staging-URL deployed
-3. Jacob testet auf Staging
-4. **NUR wenn Jacob explizit sagt „deploy live" / „auf Produktion" / „live schalten"** → PR `main → production` erstellen
-5. Nach Jacobs OK: PR mergen → Vercel deployed automatisch auf `world.herr.tech`
+## Lokales Dev-Setup
 
-## WICHTIG — Claude-Regeln
-- **NIEMALS** direkt auf `production` pushen oder mergen ohne explizite Ansage
-- **NIEMALS** Production-Deploy aus eigenem Antrieb anstoßen, auch nicht wenn „alles fertig" wirkt
-- Bei „push"/„pushen" ohne Zusatz → immer nach `main` (Staging), nie auf `production`
-- Explizite Live-Trigger sind nur: „deploy live", „auf Produktion deployen", „auf world.herr.tech", „live schalten", „auf die echte Domain"
-- Bei Unsicherheit: **nachfragen**, nicht raten
+Lokale Entwicklung läuft mit eigener Docker-Supabase. Start-Sequenz:
+`npx supabase start` (Docker muss laufen), dann `pnpm install` plus
+`pnpm dev`. Lokale Env-Vars in `.env.local` mit Supabase-Local-URL plus
+allen API-Keys. Lokales Supabase und Cloud-Supabase teilen sich keinen
+State, sind komplett unabhängig.
 
-## ⚠ GETEILTE DATENBANK (Live + Staging = gleiche Supabase-Instanz)
-**Live und Staging hängen an derselben Supabase-Datenbank.** Es gibt keine separate Staging-DB.
+Wenn der lokale Dev-Server hängt, meistens hilft `pnpm dev` neu starten —
+Next.js 16 mit Turbopack lädt Env-Vars nur beim Boot, nicht hot.
 
-Das heißt:
-- Nutzer, die auf Staging angelegt werden → sofort auch auf Live sichtbar
-- Classroom-Module, Agenten-Configs, Knowledge-Einträge etc. → sofort auf beiden Umgebungen
-- Migrationen & Schema-Änderungen treffen Live SOFORT, auch wenn auf Staging „getestet"
+## Skool-Sync (deaktiviert)
 
-**Konsequenzen für Claude:**
-- Staging-Tests sind für **Code-Verhalten**, nicht für Daten-Experimente
-- Bei Migrationen / Schema-Änderungen / Seed-Daten / Bulk-Updates → **immer** vorher Jacob fragen, bevor Scripts laufen
-- Keine „Test-Nutzer" auf Staging anlegen ohne Absprache — die landen direkt in der Live-DB
-- Bei Features die DB-Schreibzugriffe machen (z.B. neue Tabellen, Spalten, RLS-Änderungen): Jacob darauf hinweisen dass das Live-Daten betrifft
+Florians Original-Setup syncte Skool-Mitglieder über n8n-Webhooks in die
+App und gewährte Premium-Zugang. Aktuell ist `SKOOL_SYNC_ENABLED=false`
+in der Vercel-Env, der ganze Code-Pfad inkl. n8n-Workflow-Datei unter
+`n8n-workflows/skool-sync.json` ist drin aber inaktiv. Wenn du später eine
+eigene Skool-Community oder ein anderes Membership-System anbindest,
+kannst du diesen Code als Vorlage nehmen.
 
-# Stripe — Test-Mode → Live-Mode Switch (TODO vor echtem Launch)
+## Was du ändern darfst und was nicht
 
-**Aktueller Stand**: Vercel-Env (alle Environments inkl. Production) läuft mit
-`sk_test_…`. App auf `world.herr.tech` ist deployt, aber Zahlungen gehen gegen
-Stripe Test-Mode → niemand kann real bezahlen. Gewollt, solange noch nicht echt
-gelauncht ist.
+Frei änderbar sind die Brand-Strings, Texte, Farben, Routen-Namen,
+Pricing-Werte, Email-Template-Inhalte, neue Migrationen, alles im
+`src/app/admin/` für administrative UI-Verbesserungen.
 
-## Was passiert ist (Test-Mode-Setup, fertig)
-- Yearly-Prices in Stripe Test-Mode angelegt für alle 3 Pläne × Basic/Community
-  (`scripts/stripe-seed.mjs`, idempotent über lookup_keys)
-- Yearly-Price-IDs in DB-Tabelle `plans` eingetragen
-- Migration 033: `subscriptions.scheduled_*` + `stripe_schedule_id` Spalten
-- Stripe Portal-Default-Config (Test-Mode): Cancel + Subscription-Update **AUS**.
-  Plan-Wechsel + Kündigung läuft komplett über unsere App-UI. Upgrade-Confirm
-  nutzt `flow_data: subscription_update_confirm` und funktioniert trotzdem.
+Mit Vorsicht änderbar: die `agents.ts` System-Prompts — nur Brand-Strings
+ersetzen, nicht die Persönlichkeits- und Ablauf-Logik der Agenten.
 
-## Was vor Live-Launch noch fehlt (Reihenfolge wichtig!)
+Heikel sind: Auth-Routen, das Permission-Matrix-System, die Master-Switch-
+Logik zwischen Subs- und Community-Modus, die Cron-Job-Auth.
 
-1. **Stripe Live-Mode Yearly-Prices anlegen**
-   ```bash
-   STRIPE_SECRET_KEY=sk_live_xxx npm run stripe:seed
-   ```
-   Script ist idempotent. Output liefert die Live-Price-IDs (`price_…`) für alle
-   3 Pläne × monthly/yearly × basic/community.
-
-2. **DB-Update: Live-Price-IDs in `plans`-Tabelle eintragen**
-   - Aktuell stehen dort Test-Mode-IDs. Müssen durch Live-Mode-IDs ersetzt werden.
-   - Über Supabase Management API oder direkt im Studio per SQL:
-     ```sql
-     UPDATE plans SET stripe_price_basic_monthly='price_LIVE_xxx', ... WHERE id='plan_s';
-     ```
-   - ⚠️ Sobald die Live-IDs eingetragen sind, würde Test-Mode-Vercel-Env brechen.
-     Daher: Schritt 2 + Schritt 6 (Vercel-Env-Switch) müssen **direkt
-     hintereinander** passieren, sonst kurz kein Checkout möglich.
-
-3. **Stripe Live-Mode Webhook-Endpoint**
-   - https://dashboard.stripe.com/webhooks (Live-Mode)
-   - URL: `https://world.herr.tech/api/webhooks/stripe`
-   - 8 Events abonnieren:
-     - `checkout.session.completed`
-     - `customer.subscription.created`
-     - `customer.subscription.updated`
-     - `customer.subscription.deleted`
-     - `invoice.payment_succeeded`
-     - `invoice.payment_failed`
-     - `subscription_schedule.released`
-     - `subscription_schedule.canceled`
-   - Webhook-Signing-Secret notieren (`whsec_…`)
-
-4. **Stripe Live-Mode Customer-Portal-Config**
-   - https://dashboard.stripe.com/settings/billing/portal (Live-Mode)
-   - Gleiche Settings wie Test-Mode:
-     - Subscriptions: **AUS** (Plan-Wechsel läuft nur über unsere App)
-     - Cancellations: **AUS** (Kündigung läuft nur über unsere App)
-     - Payment methods: AN
-     - Customer information: AN (Email, Adresse, Tax-ID, Name, Phone)
-     - Invoice history: AN
-     - Locale: Deutsch (Default-Branding-Settings)
-
-5. **Vercel-Env auf Live umstellen** (Production + Preview Environment)
-   https://vercel.com/jonas-projects-fe8f496e/herr-tech-gpt/settings/environment-variables
-   - `STRIPE_SECRET_KEY` → `sk_live_…`
-   - `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` → `pk_live_…`
-   - `STRIPE_WEBHOOK_SECRET` → `whsec_…` (aus Schritt 3, Live-Webhook!)
-
-6. **Redeploy triggern**
-   - Vercel deployt nicht automatisch bei reiner Env-Änderung
-   - Entweder im Vercel-UI: letztes Deployment → "..." → "Redeploy"
-   - Oder leerer Commit auf main: `git commit --allow-empty -m "chore: redeploy for Stripe live keys"`
-
-7. **Live-Smoke-Test mit echter Karte**
-   - Kleinster Plan (plan_s, 19 €) abschließen
-   - Sofort kündigen über App-UI
-   - Stripe-Dashboard: Zahlung sehen, Refund manuell ausführen
-   - Webhook-Logs prüfen — alle 8 Events kommen sauber durch
-
-## Test-Mode-Keys (für Rollback)
-Test-Mode-Keys liegen in Stripe-Dashboard unter
-https://dashboard.stripe.com/test/apikeys (Test-Mode, Account "Flovision GmbH").
-Webhook-Secret findet man im jeweiligen Webhook-Endpoint-Detail.
-Nicht hier ablegen — GitHub Push-Protection blockt das.
+Bei jeder größeren Code-Änderung gilt: TypeScript strict, `pnpm tsc
+--noEmit` durchlaufen lassen, immutable patterns, Files unter 800 Zeilen.
