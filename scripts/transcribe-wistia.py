@@ -6,9 +6,13 @@ Verwendung:
   python3 scripts/transcribe-wistia.py
 
 Optionen:
-  --test        Nur 1 Video testen
-  --all         Alle Videos verarbeiten
-  --id 12345    Nur ein bestimmtes Video
+  --test              Nur 1 Video testen
+  --all               Alle Videos verarbeiten
+  --id 12345          Nur ein bestimmtes Video
+  --language en       Quellsprache des Videos (Default: de).
+                      Bei != de werden die Schnipsel über Claude ins Deutsche
+                      übersetzt, bevor sie in der Werkbank landen — die
+                      deutschen Agenten arbeiten so weiterhin auf Deutsch.
 """
 
 import requests
@@ -32,13 +36,15 @@ def _load_env():
 
 _load_env()
 
-WISTIA_KEY   = os.environ.get("WISTIA_API_KEY", "")
-ASSEMBLY_KEY = os.environ.get("ASSEMBLYAI_API_KEY", "")
-SUPABASE_URL = os.environ.get("NEXT_PUBLIC_SUPABASE_URL", "")
-SUPABASE_KEY = os.environ.get("SUPABASE_SERVICE_ROLE_KEY", "")
+WISTIA_KEY    = os.environ.get("WISTIA_API_KEY", "")
+ASSEMBLY_KEY  = os.environ.get("ASSEMBLYAI_API_KEY", "")
+SUPABASE_URL  = os.environ.get("NEXT_PUBLIC_SUPABASE_URL", "")
+SUPABASE_KEY  = os.environ.get("SUPABASE_SERVICE_ROLE_KEY", "")
+ANTHROPIC_KEY = os.environ.get("ANTHROPIC_API_KEY", "")  # für Übersetzung nicht-deutscher Videos
 
 CHUNK_WORDS    = 500   # Wörter pro Chunk
-LANGUAGE       = "de"  # Deutsch
+LANGUAGE       = "de"  # Default — per --language en|... überschreibbar
+TRANSLATE_MODEL = "claude-sonnet-4-5-20250929"
 
 # Nur wirklich irrelevante Videos überspringen
 # Live Calls werden INKLUDIERT — sie sind die aktuellsten Quellen!
@@ -164,6 +170,57 @@ def chunk_text(text: str, video_name: str, video_id: str, duration_min: float) -
     return chunks
 
 
+def translate_chunks_to_german(chunks: list, source_lang: str) -> Optional[list]:
+    """
+    Übersetzt das chunk_text-Feld jedes Schnipsels via Claude ins Deutsche.
+    Eigennamen/Produktnamen bleiben unverändert. Gibt None bei Fehler zurück.
+    """
+    if not ANTHROPIC_KEY:
+        print("    ❌ ANTHROPIC_API_KEY fehlt — Übersetzung nicht möglich")
+        return None
+
+    translated = []
+    for idx, chunk in enumerate(chunks, start=1):
+        prompt = (
+            f"Übersetze den folgenden Text aus dem {source_lang.upper()} ins Deutsche. "
+            "Behalte den Sinn präzise. Lass Eigennamen, Produktbezeichnungen und "
+            "Marken unverändert. Klinge natürlich und flüssig auf Deutsch (kein "
+            "wörtliches Wort-für-Wort). Antworte AUSSCHLIESSLICH mit dem übersetzten "
+            "Text — keine Vorbemerkung, keine Anführungszeichen, keine Erklärung.\n\n"
+            f"---\n\n{chunk['chunk_text']}"
+        )
+        try:
+            r = requests.post(
+                "https://api.anthropic.com/v1/messages",
+                headers={
+                    "x-api-key": ANTHROPIC_KEY,
+                    "anthropic-version": "2023-06-01",
+                    "content-type": "application/json",
+                },
+                json={
+                    "model": TRANSLATE_MODEL,
+                    "max_tokens": 4000,
+                    "messages": [{"role": "user", "content": prompt}],
+                },
+                timeout=300,
+            )
+            r.raise_for_status()
+            data = r.json()
+            german_text = data["content"][0]["text"].strip()
+            if not german_text:
+                print(f"    ❌ Schnipsel {idx}/{len(chunks)}: leere Übersetzung")
+                return None
+            new_chunk = dict(chunk)
+            new_chunk["chunk_text"] = german_text
+            translated.append(new_chunk)
+            print(f"    🌐 Schnipsel {idx}/{len(chunks)} ins Deutsche übersetzt")
+        except Exception as e:
+            print(f"    ❌ Übersetzung Schnipsel {idx} fehlgeschlagen: {e}")
+            return None
+
+    return translated
+
+
 def save_to_supabase(chunks: list) -> bool:
     """Speichert Chunks in der Supabase knowledge_base Tabelle."""
     r = requests.post(
@@ -229,10 +286,18 @@ def process_video(video: dict) -> bool:
 
     print(f"    📝 {len(text.split())} Wörter transkribiert")
 
-    # In Chunks aufteilen und speichern
+    # In Chunks aufteilen
     chunks = chunk_text(text, vid_name, vid_id, duration)
-    print(f"    💾 Speichere {len(chunks)} Chunks in Supabase...")
 
+    # Nicht-deutsche Videos: jeden Schnipsel über Claude ins Deutsche übersetzen,
+    # damit die deutschen Agenten weiterhin auf Deutsch arbeiten.
+    if LANGUAGE != "de":
+        print(f"    🌐 Übersetze {len(chunks)} Schnipsel von {LANGUAGE.upper()} ins Deutsche...")
+        chunks = translate_chunks_to_german(chunks, LANGUAGE)
+        if chunks is None:
+            return False
+
+    print(f"    💾 Speichere {len(chunks)} Chunks in Supabase...")
     if save_to_supabase(chunks):
         print(f"    ✅ Gespeichert!")
         return True
@@ -242,15 +307,32 @@ def process_video(video: dict) -> bool:
 
 
 def main():
+    global LANGUAGE
+
+    # --language <code> extrahieren (darf irgendwo in der Befehlszeile stehen)
+    args = list(sys.argv[1:])
+    if "--language" in args:
+        i = args.index("--language")
+        if i + 1 < len(args):
+            LANGUAGE = args[i + 1].lower().strip()
+            del args[i:i + 2]
+        else:
+            print("❌ --language braucht einen Sprachcode (z.B. en, de)")
+            return
+
     mode = "--test"
     target_id = None
 
-    if len(sys.argv) > 1:
-        mode = sys.argv[1]
-        if mode == "--id" and len(sys.argv) > 2:
-            target_id = sys.argv[2]
+    if args:
+        mode = args[0]
+        if mode == "--id" and len(args) > 1:
+            target_id = args[1]
 
     print("🚀 Wistia → AssemblyAI → Supabase Pipeline")
+    if LANGUAGE != "de":
+        print(f"   🌐 Quellsprache: {LANGUAGE.upper()} → Übersetzung nach Deutsch aktiv")
+    else:
+        print(f"   Sprache: Deutsch")
     print("=" * 50)
 
     # Alle Videos laden
