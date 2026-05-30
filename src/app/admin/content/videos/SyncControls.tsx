@@ -14,18 +14,33 @@ interface SyncResult {
   error?: string
 }
 
+type Lang = 'de' | 'en' | 'es' | 'fr' | 'auto'
+
+const LANG_OPTIONS: Array<{ value: Lang; label: string }> = [
+  { value: 'de', label: 'Deutsch' },
+  { value: 'en', label: 'Englisch' },
+  { value: 'es', label: 'Spanisch' },
+  { value: 'fr', label: 'Französisch' },
+  { value: 'auto', label: 'Automatisch erkennen' },
+]
+
 export function SyncControls({ lastRunAt }: { lastRunAt: string | null }) {
   const router = useRouter()
   const [pending, startTransition] = useTransition()
   const [result, setResult] = useState<SyncResult | null>(null)
   const [running, setRunning] = useState(false)
+  const [lang, setLang] = useState<Lang>('de')
 
   const handleTrigger = () => {
     setResult(null)
     setRunning(true)
     startTransition(async () => {
       try {
-        const res = await fetch('/api/admin/wistia-sync', { method: 'POST' })
+        const res = await fetch('/api/admin/wistia-sync', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ lang }),
+        })
         const data: SyncResult = await res.json()
         setResult(data)
         if (data.ok) {
@@ -53,15 +68,30 @@ export function SyncControls({ lastRunAt }: { lastRunAt: string | null }) {
               : 'Noch kein Sync gelaufen.'}
           </div>
         </div>
-        <button
-          type="button"
-          onClick={handleTrigger}
-          disabled={isWorking}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-white text-sm font-medium hover:bg-primary-hover disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
-        >
-          <RefreshCw size={16} className={isWorking ? 'animate-spin' : ''} />
-          {isWorking ? 'Läuft...' : 'Sync jetzt starten'}
-        </button>
+        <div className="flex items-center gap-2">
+          <label className="text-xs text-muted whitespace-nowrap">
+            Sprache:
+            <select
+              value={lang}
+              onChange={(e) => setLang(e.target.value as Lang)}
+              disabled={isWorking}
+              className="ml-2 text-sm bg-surface border border-border rounded-md px-2 py-1.5 text-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 disabled:opacity-60"
+            >
+              {LANG_OPTIONS.map((opt) => (
+                <option key={opt.value} value={opt.value}>{opt.label}</option>
+              ))}
+            </select>
+          </label>
+          <button
+            type="button"
+            onClick={handleTrigger}
+            disabled={isWorking}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-white text-sm font-medium hover:bg-primary-hover disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
+          >
+            <RefreshCw size={16} className={isWorking ? 'animate-spin' : ''} />
+            {isWorking ? 'Läuft...' : 'Sync jetzt starten'}
+          </button>
+        </div>
       </div>
 
       {result && (

@@ -33,8 +33,17 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'CRON_SECRET not configured' }, { status: 500 })
   }
 
+  // Quellsprache aus dem UI ({ lang: 'de'|'en'|'es'|'fr'|'auto' }, default 'de')
+  let lang = 'de'
+  try {
+    const body = (await req.json()) as { lang?: string }
+    if (body?.lang && typeof body.lang === 'string') lang = body.lang.toLowerCase().trim()
+  } catch {
+    // Body optional — leerer Aufruf bedeutet Default 'de'
+  }
+
   const origin = new URL(req.url).origin
-  const cronUrl = `${origin}/api/cron/wistia-sync?secret=${encodeURIComponent(cronSecret)}`
+  const cronUrl = `${origin}/api/cron/wistia-sync?secret=${encodeURIComponent(cronSecret)}&lang=${encodeURIComponent(lang)}`
 
   try {
     const res = await fetch(cronUrl, { method: 'GET', cache: 'no-store' })

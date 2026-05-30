@@ -68,20 +68,29 @@ async function fetchWistiaVideoUrl(videoId: number): Promise<string | null> {
 }
 
 // ── AssemblyAI ────────────────────────────────────────────────────────────────
-async function submitTranscription(audioUrl: string): Promise<string> {
+/**
+ * @param language ISO-Code wie 'de' / 'en' / 'es' / 'fr' / ..., oder 'auto'
+ *                 für automatische Erkennung durch AssemblyAI.
+ */
+async function submitTranscription(audioUrl: string, language: string): Promise<string> {
+  const body: Record<string, unknown> = {
+    audio_url: audioUrl,
+    speech_models: ['universal-2'],
+    punctuate: true,
+    format_text: true,
+  }
+  if (language === 'auto') {
+    body.language_detection = true
+  } else {
+    body.language_code = language
+  }
   const r = await fetch('https://api.assemblyai.com/v2/transcript', {
     method: 'POST',
     headers: {
       'Authorization': process.env.ASSEMBLYAI_API_KEY!,
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({
-      audio_url: audioUrl,
-      speech_models: ['universal-2'],
-      language_code: 'de',
-      punctuate: true,
-      format_text: true,
-    }),
+    body: JSON.stringify(body),
   })
   const data = await r.json()
   if (!data.id) throw new Error(`AssemblyAI submission failed: ${JSON.stringify(data)}`)
@@ -158,6 +167,36 @@ Regel: Sei großzügig, aber nur sinnvolle Agenten.`,
   }
 }
 
+// ── Übersetzung nicht-deutscher Schnipsel ins Deutsche ───────────────────────
+async function translateChunksToGerman(chunks: Chunk[], sourceLang: string): Promise<Chunk[] | null> {
+  if (!process.env.ANTHROPIC_API_KEY) return null
+  const anthropic = createAnthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
+  const translated: Chunk[] = []
+  for (let i = 0; i < chunks.length; i++) {
+    const chunk = chunks[i]
+    try {
+      const { text } = await generateText({
+        model: anthropic('claude-sonnet-4-5-20250929'),
+        messages: [{
+          role: 'user',
+          content:
+            `Übersetze den folgenden Text aus dem ${sourceLang.toUpperCase()} ins Deutsche. ` +
+            `Behalte den Sinn präzise. Lass Eigennamen, Produktbezeichnungen und Marken ` +
+            `unverändert. Klinge natürlich und flüssig auf Deutsch. ` +
+            `Antworte AUSSCHLIESSLICH mit dem übersetzten Text — keine Vorbemerkung, ` +
+            `keine Anführungszeichen, keine Erklärung.\n\n---\n\n${chunk.chunk_text}`,
+        }],
+      })
+      const germanText = text.trim()
+      if (!germanText) return null
+      translated.push({ ...chunk, chunk_text: germanText })
+    } catch {
+      return null
+    }
+  }
+  return translated
+}
+
 // ── Haupt-Handler: führt beide Phasen aus ─────────────────────────────────────
 export async function GET(req: NextRequest) {
   // Auth: entweder Vercel Cron Secret, oder manueller Admin-Trigger (?secret=...)
@@ -168,6 +207,9 @@ export async function GET(req: NextRequest) {
   if (!isVercelCron && !isManual) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
+
+  // Quellsprache aus der URL (?lang=de|en|es|fr|auto, default de)
+  const lang = (req.nextUrl.searchParams.get('lang') || 'de').toLowerCase().trim()
 
   const supabase = serviceClient()
   const notes: string[] = []
@@ -185,11 +227,24 @@ export async function GET(req: NextRequest) {
     try {
       const status = await getTranscriptStatus(p.transcript_id)
       if (status.status === 'completed') {
-        const chunks = chunkText(status.text ?? '', p.video_id, p.video_name, p.duration_minutes)
+        let chunks = chunkText(status.text ?? '', p.video_id, p.video_name, p.duration_minutes)
         if (chunks.length > 0) {
+          // Falls AssemblyAI was anderes als Deutsch transkribiert hat → Schnipsel
+          // über Claude ins Deutsche übersetzen, damit die deutschen Agenten weiter
+          // auf Deutsch arbeiten.
+          const detected: string = (status.language_code ?? 'de').toLowerCase()
+          if (detected !== 'de') {
+            const translated = await translateChunksToGerman(chunks, detected)
+            if (!translated) {
+              notes.push(`✗ ${p.video_name} → Übersetzung aus ${detected.toUpperCase()} fehlgeschlagen`)
+              continue
+            }
+            chunks = translated
+            notes.push(`🌐 ${p.video_name} → ${chunks.length} Schnipsel aus ${detected.toUpperCase()} ins Deutsche übersetzt`)
+          }
           await supabase.from('knowledge_base').insert(chunks)
-          // Kategorisieren
-          const agents = await categorizeVideo(p.video_name, status.text ?? '')
+          // Kategorisieren (auf Basis des fertigen — ggf. übersetzten — Texts)
+          const agents = await categorizeVideo(p.video_name, chunks[0].chunk_text)
           if (agents.length > 0) {
             await supabase
               .from('knowledge_base')
@@ -262,7 +317,7 @@ export async function GET(req: NextRequest) {
         notes.push(`✗ ${v.name} → no URL`)
         continue
       }
-      const transcriptId = await submitTranscription(url)
+      const transcriptId = await submitTranscription(url, lang)
       await supabase.from('pending_transcripts').insert({
         video_id: String(v.id),
         video_name: v.name,
