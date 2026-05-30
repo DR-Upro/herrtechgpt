@@ -58,17 +58,20 @@ TITEL: ${title}
 INHALT: ${previewText.slice(0, 800)}
 
 Verfügbare Agenten:
+- claude-insider: ALLES zu Claude, Claude Cowork, Claude Code, Claude Desktop, Anthropic-Modelle (Sonnet/Opus/Haiku), Claude Skills, Hooks, MCP, Subagents, Artefakte, Anthropic-spezifisches Prompt-Engineering
 - content-hook: Hooks, viraler Content, Social Media, Storytelling
 - funnel-monetization: Sales, Funnels, Leadgenerierung, E-Mail, LinkedIn
 - personal-growth: Mindset, Produktivität, persönliche Entwicklung
-- ai-prompt: Prompting, ChatGPT, KI-Workflows
-- upro: KI-Tools, Automatisierung, n8n, Make, Tech-Setup
+- ai-prompt: Prompting allgemein (ChatGPT, Gemini, Mistral), Prompt-Engineering-Grundlagen, KI-Workflows tool-übergreifend — NICHT Claude-spezifisch (das macht claude-insider)
+- upro: KI-Tools allgemein, Automatisierung, n8n, Make, Tech-Setup
 - business-coach: Business-Strategie, Wachstum, Positionierung
 
 Antworte NUR mit valid JSON:
 {"agents": ["agent-id", "agent-id"]}
 
-Regel: Sei großzügig, aber nur sinnvolle Agenten.`,
+Regeln:
+- Sei großzügig, aber nur sinnvolle Agenten.
+- Wenn der Inhalt explizit Anthropic-Produkte erwähnt (Claude, Cowork, Claude Code, Skills, MCP, Artefakte), füge IMMER claude-insider hinzu.`,
     }],
   })
   try {
