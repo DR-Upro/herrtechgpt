@@ -25,6 +25,17 @@ function shouldSkip(name: string): boolean {
   return SKIP_PATTERNS.some((p) => name.toLowerCase().includes(p.toLowerCase()))
 }
 
+// Schneidet aus Claudes Antwort den reinen JSON-Block raus — egal ob Markdown-
+// Codezäune oder erklärender Text drum herum stehen. Verhindert "Unexpected
+// non-whitespace character"-Fehler bei JSON.parse.
+function extractJsonObject(text: string): string {
+  const stripped = text.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim()
+  const first = stripped.indexOf('{')
+  const last = stripped.lastIndexOf('}')
+  if (first === -1 || last === -1 || last < first) return stripped
+  return stripped.slice(first, last + 1)
+}
+
 // ── Service-Role Supabase Client (Cron-Kontext, kein User) ────────────────────
 function serviceClient() {
   return createAdminClient(
@@ -159,8 +170,7 @@ Regel: Sei großzügig, aber nur sinnvolle Agenten.`,
     }],
   })
   try {
-    const cleaned = text.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim()
-    const parsed = JSON.parse(cleaned)
+    const parsed = JSON.parse(extractJsonObject(text))
     return Array.isArray(parsed.agents) ? parsed.agents : []
   } catch {
     return []
@@ -373,8 +383,7 @@ Antworte NUR mit valid JSON:
 Nur Videos listen, die wirklich eindeutig überholt sind. Bei Zweifel weglassen.`,
           }],
         })
-        const cleaned = text.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim()
-        const parsed = JSON.parse(cleaned)
+        const parsed = JSON.parse(extractJsonObject(text))
         const ids: string[] = Array.isArray(parsed.obsolete_ids) ? parsed.obsolete_ids : []
         for (const id of ids) {
           // Nur flaggen (is_active false), nicht löschen
