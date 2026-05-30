@@ -9,9 +9,9 @@ import {
   extractJsonObject,
 } from '@/lib/knowledge-pipeline'
 
-// 13 Min — gibt der parallelen Übersetzung + Stempel-Schritt + DB-Inserts
-// genug Puffer auch für 60+-Minuten-Videos.
-export const maxDuration = 800
+// 5 Min — Vercel-Pro-Maximum. Reicht locker, weil die Übersetzung jetzt
+// parallel läuft: 70 Schnipsel ÷ 8 gleichzeitig ≈ 35 Sek statt 4-5 Min.
+export const maxDuration = 300
 
 const MAX_NEW_PER_RUN = 3 // max. 3 neue Videos pro Sync (Token-Budget)
 const SKIP_PATTERNS = [
