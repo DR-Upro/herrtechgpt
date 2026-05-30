@@ -2,11 +2,17 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient as createAdminClient } from '@supabase/supabase-js'
 import { createAnthropic } from '@ai-sdk/anthropic'
 import { generateText } from 'ai'
+import {
+  chunkText,
+  categorize,
+  translateChunksToGerman,
+  extractJsonObject,
+} from '@/lib/knowledge-pipeline'
 
-export const maxDuration = 300
+// 13 Min — gibt der parallelen Übersetzung + Stempel-Schritt + DB-Inserts
+// genug Puffer auch für 60+-Minuten-Videos.
+export const maxDuration = 800
 
-// Konfiguration
-const CHUNK_WORDS = 500
 const MAX_NEW_PER_RUN = 3 // max. 3 neue Videos pro Sync (Token-Budget)
 const SKIP_PATTERNS = [
   'Skool_Intro', 'Masterclass_Intro', 'SkoolVideo',
@@ -23,17 +29,6 @@ interface WistiaVideo {
 
 function shouldSkip(name: string): boolean {
   return SKIP_PATTERNS.some((p) => name.toLowerCase().includes(p.toLowerCase()))
-}
-
-// Schneidet aus Claudes Antwort den reinen JSON-Block raus — egal ob Markdown-
-// Codezäune oder erklärender Text drum herum stehen. Verhindert "Unexpected
-// non-whitespace character"-Fehler bei JSON.parse.
-function extractJsonObject(text: string): string {
-  const stripped = text.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim()
-  const first = stripped.indexOf('{')
-  const last = stripped.lastIndexOf('}')
-  if (first === -1 || last === -1 || last < first) return stripped
-  return stripped.slice(first, last + 1)
 }
 
 // ── Service-Role Supabase Client (Cron-Kontext, kein User) ────────────────────
@@ -115,98 +110,6 @@ async function getTranscriptStatus(transcriptId: string) {
   return r.json()
 }
 
-// ── Chunking ──────────────────────────────────────────────────────────────────
-interface Chunk {
-  video_id: string
-  video_name: string
-  chunk_text: string
-  chunk_index: number
-  duration_minutes: number | null
-  is_active: boolean
-  source: string
-}
-
-function chunkText(text: string, videoId: string, videoName: string, durationMin: number | null): Chunk[] {
-  const words = text.split(/\s+/).filter(Boolean)
-  const chunks: Chunk[] = []
-  for (let i = 0; i < words.length; i += CHUNK_WORDS) {
-    chunks.push({
-      video_id: videoId,
-      video_name: videoName,
-      chunk_text: words.slice(i, i + CHUNK_WORDS).join(' '),
-      chunk_index: Math.floor(i / CHUNK_WORDS),
-      duration_minutes: durationMin,
-      is_active: true,
-      source: 'wistia',
-    })
-  }
-  return chunks
-}
-
-// ── Kategorisierung via Claude ────────────────────────────────────────────────
-async function categorizeVideo(videoName: string, previewText: string): Promise<string[]> {
-  const anthropic = createAnthropic({ apiKey: process.env.ANTHROPIC_API_KEY! })
-  const { text } = await generateText({
-    model: anthropic('claude-sonnet-4-5-20250929'),
-    messages: [{
-      role: 'user',
-      content: `Ordne dieses Video den passenden Agenten zu.
-
-TITEL: ${videoName}
-INHALT: ${previewText.slice(0, 800)}
-
-Verfügbare Agenten:
-- content-hook: Hooks, viraler Content, Social Media, Storytelling
-- funnel-monetization: Sales, Funnels, Leadgenerierung, E-Mail, LinkedIn
-- personal-growth: Mindset, Produktivität, persönliche Entwicklung
-- ai-prompt: Prompting, ChatGPT, KI-Workflows
-- upro: KI-Tools, Automatisierung, n8n, Make, Tech-Setup
-- business-coach: Business-Strategie, Wachstum, Positionierung
-
-Antworte NUR mit valid JSON:
-{"agents": ["agent-id", "agent-id"]}
-
-Regel: Sei großzügig, aber nur sinnvolle Agenten.`,
-    }],
-  })
-  try {
-    const parsed = JSON.parse(extractJsonObject(text))
-    return Array.isArray(parsed.agents) ? parsed.agents : []
-  } catch {
-    return []
-  }
-}
-
-// ── Übersetzung nicht-deutscher Schnipsel ins Deutsche ───────────────────────
-async function translateChunksToGerman(chunks: Chunk[], sourceLang: string): Promise<Chunk[] | null> {
-  if (!process.env.ANTHROPIC_API_KEY) return null
-  const anthropic = createAnthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
-  const translated: Chunk[] = []
-  for (let i = 0; i < chunks.length; i++) {
-    const chunk = chunks[i]
-    try {
-      const { text } = await generateText({
-        model: anthropic('claude-sonnet-4-5-20250929'),
-        messages: [{
-          role: 'user',
-          content:
-            `Übersetze den folgenden Text aus dem ${sourceLang.toUpperCase()} ins Deutsche. ` +
-            `Behalte den Sinn präzise. Lass Eigennamen, Produktbezeichnungen und Marken ` +
-            `unverändert. Klinge natürlich und flüssig auf Deutsch. ` +
-            `Antworte AUSSCHLIESSLICH mit dem übersetzten Text — keine Vorbemerkung, ` +
-            `keine Anführungszeichen, keine Erklärung.\n\n---\n\n${chunk.chunk_text}`,
-        }],
-      })
-      const germanText = text.trim()
-      if (!germanText) return null
-      translated.push({ ...chunk, chunk_text: germanText })
-    } catch {
-      return null
-    }
-  }
-  return translated
-}
-
 // ── Haupt-Handler: führt beide Phasen aus ─────────────────────────────────────
 export async function GET(req: NextRequest) {
   // Auth: entweder Vercel Cron Secret, oder manueller Admin-Trigger (?secret=...)
@@ -254,7 +157,7 @@ export async function GET(req: NextRequest) {
           }
           await supabase.from('knowledge_base').insert(chunks)
           // Kategorisieren (auf Basis des fertigen — ggf. übersetzten — Texts)
-          const agents = await categorizeVideo(p.video_name, chunks[0].chunk_text)
+          const agents = await categorize(p.video_name, chunks[0].chunk_text)
           if (agents.length > 0) {
             await supabase
               .from('knowledge_base')

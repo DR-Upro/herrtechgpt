@@ -79,15 +79,40 @@ Regel: Sei großzügig, aber nur sinnvolle Agenten.`,
   }
 }
 
+// Verarbeitet items mit kontrollierter Parallelität — N Worker, die sich
+// die Arbeit teilen. Verhindert Vercel-Function-Timeouts bei langen Listen.
+async function mapWithLimit<T, R>(
+  items: T[],
+  limit: number,
+  fn: (item: T, idx: number) => Promise<R>,
+): Promise<R[]> {
+  const results: R[] = new Array(items.length)
+  let cursor = 0
+  async function worker() {
+    while (true) {
+      const myIdx = cursor++
+      if (myIdx >= items.length) return
+      results[myIdx] = await fn(items[myIdx], myIdx)
+    }
+  }
+  const workers = Array.from(
+    { length: Math.min(limit, items.length) },
+    () => worker(),
+  )
+  await Promise.all(workers)
+  return results
+}
+
+const TRANSLATE_CONCURRENCY = 8
+
 export async function translateChunksToGerman(
   chunks: Chunk[],
   sourceLang: string,
 ): Promise<Chunk[] | null> {
   if (!process.env.ANTHROPIC_API_KEY) return null
   const anthropic = createAnthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
-  const translated: Chunk[] = []
-  for (const chunk of chunks) {
-    try {
+  try {
+    return await mapWithLimit(chunks, TRANSLATE_CONCURRENCY, async (chunk) => {
       const { text } = await generateText({
         model: anthropic('claude-sonnet-4-5-20250929'),
         messages: [{
@@ -101,13 +126,12 @@ export async function translateChunksToGerman(
         }],
       })
       const germanText = text.trim()
-      if (!germanText) return null
-      translated.push({ ...chunk, chunk_text: germanText })
-    } catch {
-      return null
-    }
+      if (!germanText) throw new Error('Leere Übersetzung')
+      return { ...chunk, chunk_text: germanText }
+    })
+  } catch {
+    return null
   }
-  return translated
 }
 
 // Markdown-Syntax aus rohem MD entfernen, damit der Stempel-Schritt sauberen
