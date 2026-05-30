@@ -25,6 +25,7 @@ import {
   Users,
   Lock,
   BookOpen,
+  FilePlus,
   Film,
   Ticket,
   Settings,
@@ -1147,6 +1148,13 @@ function AdminSidebar({
             label="Video-Sync"
             description="Wistia-Status, Transkriptionen"
             isActive={pathname.startsWith('/admin/content/videos')}
+          />
+          <NavItem
+            href="/admin/content/text"
+            icon={FilePlus}
+            label="Wissen einkippen"
+            description="Text, MD-Dateien direkt"
+            isActive={pathname.startsWith('/admin/content/text')}
           />
         </div>
 
